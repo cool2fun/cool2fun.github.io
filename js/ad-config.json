@@ -1,0 +1,20 @@
+{
+  "ad-slot-970x250": {
+    "adClient": "ca-pub-6556788076088846",
+    "adSlot": "7979200749",
+    "width": "970",
+    "height": "250"
+  },
+  "ad-slot-300x250": {
+    "adClient": "ca-pub-6556788076088846",
+    "adSlot": "9406916186",
+    "width": "300",
+    "height": "250"
+  },
+  "ad-slot-728x90": {
+    "adClient": "ca-pub-6556788076088846",
+    "adSlot": "5424355442",
+    "width": "728",
+    "height": "90"
+  }
+}

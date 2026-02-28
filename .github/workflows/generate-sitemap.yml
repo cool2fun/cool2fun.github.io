@@ -1,0 +1,104 @@
+name: Auto-generate Sitemap & Robots.txt
+
+on:
+  push:
+    branches: [ gh-pages ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+
+      - name: Generate sitemap.xml and robots.txt
+        run: |
+          node << 'EOF'
+          const fs = require('fs');
+
+          // Đọc games-data.js và extract slugs
+          const dataFile = fs.readFileSync('js/games-data.js', 'utf8');
+          const slugs = [];
+          const re = /slug:\s*"([^"]+)"/g;
+          let m;
+          while ((m = re.exec(dataFile)) !== null) {
+            slugs.push(m[1]);
+          }
+          console.log('Found', slugs.length, 'games');
+
+          const base = 'https://cool2fun.github.io';
+          const today = new Date().toISOString().split('T')[0];
+
+          // Sitemap
+          const staticPages = [
+            { loc: base + '/',                  priority: '1.0', freq: 'daily'   },
+            { loc: base + '/category.html',     priority: '0.8', freq: 'weekly'  },
+            { loc: base + '/about-us.html',     priority: '0.4', freq: 'monthly' },
+            { loc: base + '/privacy-policy.html', priority: '0.4', freq: 'monthly' },
+            { loc: base + '/terms-of-use.html', priority: '0.4', freq: 'monthly' },
+            { loc: base + '/contact.html',      priority: '0.4', freq: 'monthly' },
+          ];
+
+          const topGames = ['slope','run-3','subway-surfers','drive-mad','retro-bowl','monkey-mart'];
+
+          const gamePages = slugs.map(slug => ({
+            loc: base + '/' + slug + '.html',
+            priority: topGames.includes(slug) ? '0.9' : '0.7',
+            freq: 'monthly',
+          }));
+
+          const all = [...staticPages, ...gamePages];
+
+          const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+          <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+          ${all.map(u => `  <url>
+              <loc>${u.loc}</loc>
+              <lastmod>${today}</lastmod>
+              <changefreq>${u.freq}</changefreq>
+              <priority>${u.priority}</priority>
+            </url>`).join('\n')}
+          </urlset>`;
+
+          fs.writeFileSync('sitemap.xml', sitemap.replace(/^ {10}/gm, ''));
+          console.log('sitemap.xml generated:', all.length, 'URLs');
+
+          // Robots.txt
+          const robots = `User-agent: *
+          Allow: /
+
+          User-agent: Mediapartners-Google
+          Allow: /
+
+          User-agent: AdsBot-Google
+          Allow: /
+
+          User-agent: AhrefsBot
+          Crawl-delay: 10
+
+          User-agent: SemrushBot
+          Crawl-delay: 10
+
+          Sitemap: ${base}/sitemap.xml
+          `;
+
+          fs.writeFileSync('robots.txt', robots.replace(/^ {10}/gm, ''));
+          console.log('robots.txt generated');
+          EOF
+
+      - name: Preview output
+        run: |
+          echo "=== sitemap.xml (first 20 lines) ==="
+          head -20 sitemap.xml
+          echo ""
+          echo "=== robots.txt ==="
+          cat robots.txt
+
+      - name: Commit changes
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add sitemap.xml robots.txt
+          git diff --staged --quiet || git commit -m "chore: auto-update sitemap & robots.txt [skip ci]"
+          git push || echo "Nothing to push"
