@@ -2,37 +2,138 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Cool2fun - Math Edu Games</title>
-  <meta name="description" content="Play free math games on Cool2Fun. No downloads">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cool2fun - Math Edu Games Responsive Banner</title>
+  <meta name="description" content="Responsive 300x600 or 160x600 banner source for Cool2Fun.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
+    :root {
+      --banner-width: 300px;
+      --banner-height: 600px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
       width: 100%;
-      height: 100%;
-      background: transparent;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      min-width: 160px;
+      max-width: 100%;
+      height: var(--banner-height);
+      min-height: var(--banner-height);
+      max-height: var(--banner-height);
       overflow: hidden;
+      background: transparent;
+      scrollbar-width: none;
+      overscroll-behavior: none;
+    }
+
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+      display: none;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 160px;
+    }
+
+    .banner-frame {
+      width: 100%;
+      height: var(--banner-height);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: transparent;
+    }
+
+    #div-gpt-ad-1773396364126-0 {
+      width: var(--banner-width);
+      height: var(--banner-height);
+      min-width: var(--banner-width);
+      min-height: var(--banner-height);
+      max-width: var(--banner-width);
+      max-height: var(--banner-height);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   </style>
-<script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
-<script>
-  window.googletag = window.googletag || {cmd: []};
-  googletag.cmd.push(function() {
-    googletag.defineSlot('/23136362493/300x600', [[300, 600], [160, 600]], 'div-gpt-ad-1773396364126-0').addService(googletag.pubads());
-    googletag.pubads().enableSingleRequest();
-    googletag.enableServices();
-  });
-</script>
+  <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
+  <script>
+    window.googletag = window.googletag || { cmd: [] };
+
+    const SLOT_ID = 'div-gpt-ad-1773396364126-0';
+    let bannerSlot = null;
+    let currentBannerWidth = null;
+
+    const getPreferredBannerWidth = () => (window.innerWidth >= 300 ? 300 : 160);
+
+    const applyBannerLayout = () => {
+      currentBannerWidth = getPreferredBannerWidth();
+      document.documentElement.style.setProperty('--banner-width', `${currentBannerWidth}px`);
+      document.documentElement.style.setProperty('--banner-height', '600px');
+      const slot = document.getElementById(SLOT_ID);
+      if (slot) {
+        slot.style.width = `${currentBannerWidth}px`;
+        slot.style.minWidth = `${currentBannerWidth}px`;
+        slot.style.maxWidth = `${currentBannerWidth}px`;
+      }
+      return currentBannerWidth;
+    };
+
+    const debounce = (fn, waitMs) => {
+      let timeoutId;
+      return () => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(fn, waitMs);
+      };
+    };
+
+    googletag.cmd.push(function () {
+      applyBannerLayout();
+
+      const sizeMapping = googletag.sizeMapping()
+        .addSize([300, 600], [[300, 600], [160, 600]])
+        .addSize([160, 600], [[160, 600]])
+        .addSize([0, 0], [])
+        .build();
+
+      bannerSlot = googletag.defineSlot('/23136362493/300x600', [[300, 600], [160, 600]], SLOT_ID)
+        .defineSizeMapping(sizeMapping)
+        .addService(googletag.pubads());
+
+      googletag.pubads().enableSingleRequest();
+      googletag.pubads().collapseEmptyDivs();
+      googletag.enableServices();
+
+      const onResize = debounce(() => {
+        const nextWidth = getPreferredBannerWidth();
+        if (nextWidth === currentBannerWidth) return;
+        applyBannerLayout();
+        if (bannerSlot) googletag.pubads().refresh([bannerSlot]);
+      }, 180);
+
+      window.addEventListener('resize', onResize, { passive: true });
+    });
+  </script>
 </head>
 <body>
-<!-- /23136362493/300x600 -->
-<div id='div-gpt-ad-1773396364126-0' style='min-width: 160px; min-height: 600px;'>
+  <div class="banner-frame">
+    <div id="div-gpt-ad-1773396364126-0" aria-label="Advertisement"></div>
+  </div>
   <script>
-    googletag.cmd.push(function() { googletag.display('div-gpt-ad-1773396364126-0'); });
+    googletag.cmd.push(function () {
+      googletag.display(SLOT_ID);
+    });
   </script>
-</div>
 </body>
 </html>
