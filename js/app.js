@@ -135,14 +135,38 @@
       return '<a href="category.html?cat=' + c + '" class="cat-tag">' + c + '</a>';
     }).join('');
 
-    // Preroll VAST (IMA) rồi mới nạp game — tránh chạy game trước quảng cáo
+    // Nút Play (user gesture) → IMA preroll có âm thanh ổn định hơn trên Safari/iOS → nạp iframe
     function loadGameIntoFrame() {
       frame.src = game.src;
     }
-    if (window.Cool2FunPreroll && typeof window.Cool2FunPreroll.runAfterPreroll === 'function') {
-      window.Cool2FunPreroll.runAfterPreroll(loadGameIntoFrame);
+    function startPrerollThenGame() {
+      if (window.Cool2FunPreroll && typeof window.Cool2FunPreroll.runAfterPreroll === 'function') {
+        window.Cool2FunPreroll.runAfterPreroll(loadGameIntoFrame);
+      } else {
+        loadGameIntoFrame();
+      }
+    }
+    var wrapper = qs('#gameWrapper');
+    if (wrapper && !qs('#gamePlayGate')) {
+      var gate = document.createElement('div');
+      gate.id = 'gamePlayGate';
+      gate.className = 'game-play-gate';
+      gate.setAttribute('role', 'dialog');
+      gate.setAttribute('aria-label', 'Start game');
+      gate.innerHTML =
+        '<div class="game-play-gate__inner">' +
+        '<p class="game-play-gate__title"><i class="fas fa-play-circle"></i> Ready to play</p>' +
+        '<p class="game-play-gate__sub">Tap Play to continue. A short video ad may play with sound, then your game loads.</p>' +
+        '<button type="button" id="gamePlayBtn" class="game-play-gate__btn"><i class="fas fa-play"></i> Play game</button>' +
+        '</div>';
+      wrapper.insertBefore(gate, frame);
+      qs('#gamePlayBtn').addEventListener('click', function () {
+        gate.classList.add('is-dismissed');
+        gate.setAttribute('aria-hidden', 'true');
+        startPrerollThenGame();
+      });
     } else {
-      loadGameIntoFrame();
+      startPrerollThenGame();
     }
 
     // Sidebar

@@ -1,6 +1,7 @@
 window.GAMES = [
   // ── TOP GAMES ─────────────────────────────────────────────
   { slug:"slope",                      name:"Slope",                        cat:["Arcade","Action"],             desc:"Endless ball runner on a neon slope",              src:"games/slope/index.html" },
+  { slug:"cs-dust",                   name:"CS Dust",                      cat:["Shooting","Action"],            desc:"Browser Unity FPS — classic dust-style team shooter", src:"games/cs-dust/index.html" },
   { slug:"subway-surfers",             name:"Subway Surfers",               cat:["Action","Arcade"],             desc:"Classic endless rail runner",                      src:"https://ubg98.github.io/SubwaySurfers/" },
   { slug:"run-3",                      name:"Run 3",                        cat:["Action","Arcade"],             desc:"Run through endless space tunnels",                src:"https://ubg98.github.io/Run3/" },
   { slug:"retro-bowl",                 name:"Retro Bowl",                   cat:["Sports","Simulation"],         desc:"Old-school American football simulation",           src:"games/rb/index.html" },

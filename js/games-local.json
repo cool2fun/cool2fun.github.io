@@ -1,0 +1,18 @@
+{
+  "localGames": [
+    {
+      "slug": "slope",
+      "name": "Slope",
+      "src": "games/slope/index.html",
+      "engine": "unity-webgl"
+    },
+    {
+      "slug": "cs-dust",
+      "name": "CS Dust",
+      "src": "games/cs-dust/index.html",
+      "engine": "unity-webgl",
+      "path": "games/cs-dust",
+      "meta": "games/cs-dust/game.json"
+    }
+  ]
+}

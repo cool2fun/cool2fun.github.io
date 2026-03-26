@@ -164,9 +164,6 @@
     var sz = slotSize();
 
     try {
-      if (adDisplayContainer && adDisplayContainer.initialize) {
-        adDisplayContainer.initialize();
-      }
       if (overlayEl) {
         overlayEl.classList.add('is-active');
         overlayEl.setAttribute('aria-hidden', 'false');
@@ -214,6 +211,9 @@
     adsRequest.continuousPlayback = false;
 
     try {
+      if (adDisplayContainer && adDisplayContainer.initialize) {
+        adDisplayContainer.initialize();
+      }
       adsLoader.requestAds(adsRequest);
     } catch (e) {
       console.warn('[Cool2FunPreroll] requestAds:', e);
