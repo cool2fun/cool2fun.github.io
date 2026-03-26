@@ -32,18 +32,17 @@
     numRedirects: 10
   };
 
-  function getAdTagBase() {
-    var descParam = encodeURIComponent(
-      CONFIG.usePageAsDescriptionUrl
-        ? String(window.location.href || "").split("#")[0]
-        : CONFIG.descriptionUrl
-    );
-    return (
-      "https://pubads.g.doubleclick.net/gampad/ads" +
-      "?iu=" +
-      encodeURIComponent(CONFIG.adUnitPath) +
+  /** Cùng tag VAST ima3vpaid + GAM như trang play Cool2Fun */
+  function getAdTagUrl() {
+    var inner =
+      "https://pubads.g.doubleclick.net/gampad/ads?iu=" +
+      CONFIG.adUnitPath +
       "&description_url=" +
-      descParam +
+      encodeURIComponent(
+        CONFIG.usePageAsDescriptionUrl
+          ? String(window.location.href || "").split("#")[0]
+          : CONFIG.descriptionUrl
+      ) +
       "&tfcd=" +
       CONFIG.tfcd +
       "&npa=" +
@@ -52,17 +51,13 @@
       CONFIG.sz +
       "&ciu_szs=" +
       CONFIG.ciu_szs +
-      "&gdfp_req=1" +
-      "&unviewed_position_start=1" +
-      "&output=vast" +
-      "&env=vp" +
-      "&impl=s" +
-      "&correlator="
+      "&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&vpos=preroll&vpmute=0&vpa=click&type=js&vad_type=linear";
+    return (
+      "https://tpc.googlesyndication.com/ima3vpaid?vad_format=linear&correlator=" +
+      Date.now() +
+      "&adtagurl=" +
+      encodeURIComponent(inner)
     );
-  }
-
-  function getAdTagUrl() {
-    return getAdTagBase() + Date.now();
   }
 
   function applyVpaidMode() {

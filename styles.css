@@ -259,8 +259,8 @@ main {
 /* ── GAME PAGE LAYOUT ───────────────────────────────────────── */
 .game-layout {
   display: grid;
-  grid-template-columns: 1fr 260px;
-  gap: 1.25rem;
+  grid-template-columns: 1fr 280px;
+  gap: 1.5rem;
   align-items: start;
 }
 
@@ -284,13 +284,55 @@ main {
   width: 100%;
   height: 100%;
   border: none;
+  background: #0d0d12;
+}
+
+/* IMA preroll (Cool2FunPreroll) */
+.ima-preroll-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  background: #000;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+}
+.ima-preroll-overlay.is-active {
+  display: flex;
+}
+.ima-ad-container {
+  position: absolute;
+  inset: 0;
+}
+.ima-ad-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+.ima-preroll-hint {
+  position: absolute;
+  bottom: 10px;
+  left: 12px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0;
+  z-index: 9;
+  pointer-events: none;
+  letter-spacing: 0.02em;
 }
 
 .game-controls-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: .75rem;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--border);
 }
 .cat-tag {
   display: inline-flex;
@@ -327,19 +369,22 @@ main {
   background: var(--surface);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  padding: 1.25rem;
-  margin-top: 1rem;
+  padding: 1.35rem 1.5rem;
+  margin-top: 1.25rem;
+  border: 1px solid var(--border);
 }
 .game-info-box h2 {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: var(--primary);
-  margin-bottom: .5rem;
+  margin-bottom: 0.55rem;
+  line-height: 1.3;
 }
 .game-info-box p {
-  font-size: .9rem;
+  font-size: 0.92rem;
   color: var(--text-muted);
-  line-height: 1.7;
+  line-height: 1.75;
+  max-width: 72ch;
 }
 
 /* Sidebar panel */

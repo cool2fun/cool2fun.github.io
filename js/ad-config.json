@@ -1,4 +1,11 @@
 {
+  "_cool2funVastIma": {
+    "adUnitPath": "/23136362493/appscript-ads-video",
+    "descriptionUrl": "https://cool2fun.github.io/",
+    "wrapper": "https://tpc.googlesyndication.com/ima3vpaid?vad_format=linear",
+    "code": "js/game-preroll-vast.js",
+    "unityCsDust": "games/cs-dust/ads.js"
+  },
   "ad-slot-970x250": {
     "adClient": "ca-pub-6556788076088846",
     "adSlot": "7979200749",

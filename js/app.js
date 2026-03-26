@@ -135,8 +135,15 @@
       return '<a href="category.html?cat=' + c + '" class="cat-tag">' + c + '</a>';
     }).join('');
 
-    // Load game iframe
-    frame.src = game.src;
+    // Preroll VAST (IMA) rồi mới nạp game — tránh chạy game trước quảng cáo
+    function loadGameIntoFrame() {
+      frame.src = game.src;
+    }
+    if (window.Cool2FunPreroll && typeof window.Cool2FunPreroll.runAfterPreroll === 'function') {
+      window.Cool2FunPreroll.runAfterPreroll(loadGameIntoFrame);
+    } else {
+      loadGameIntoFrame();
+    }
 
     // Sidebar
     var sidebar = qs('#otherGamesList');
