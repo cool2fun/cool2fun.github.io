@@ -5,18 +5,26 @@
 (function () {
   'use strict';
 
-  var INNER_AD_TAG =
-    'https://pubads.g.doubleclick.net/gampad/ads?iu=/23136362493/appscript-ads-video' +
-    '&description_url=' + encodeURIComponent('https://cool2fun.github.io/') +
-    '&tfcd=0&npa=0&sz=640x480&ciu_szs=' + encodeURIComponent('160x600,300x600') +
-    '&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&vpos=preroll&vpmute=0&vpa=click&type=js&vad_type=linear';
+  /** vpmute=1 + adWillPlayMuted khớp nhau — giảm lỗi VPAID “unexpected error” khi autoplay */
+  function buildInnerAdTag(vpmute01) {
+    return (
+      'https://pubads.g.doubleclick.net/gampad/ads?iu=/23136362493/appscript-ads-video' +
+      '&description_url=' +
+      encodeURIComponent('https://cool2fun.github.io/') +
+      '&tfcd=0&npa=0&sz=640x480&ciu_szs=' +
+      encodeURIComponent('160x600,300x600') +
+      '&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&vpos=preroll&vpmute=' +
+      vpmute01 +
+      '&vpa=click&type=js&vad_type=linear'
+    );
+  }
 
-  function vastWrapperUrl() {
+  function vastWrapperUrl(innerTag) {
     return (
       'https://tpc.googlesyndication.com/ima3vpaid?vad_format=linear&correlator=' +
       Date.now() +
       '&adtagurl=' +
-      encodeURIComponent(INNER_AD_TAG)
+      encodeURIComponent(innerTag || buildInnerAdTag('1'))
     );
   }
 
@@ -27,10 +35,16 @@
     nonLinearAdSlotHeight: 600,
     vastLoadTimeout: 60000,
     loadVideoTimeout: 60000,
-    vpaidMode: 'insecure',
+    /**
+     * Trang HTTPS (GitHub Pages): ENABLED thường ổn hơn cho VPAID 2 trong secure context.
+     * File / local HTTP: insecure.
+     */
+    vpaidMode: typeof location !== 'undefined' && location.protocol === 'https:' ? 'enabled' : 'insecure',
     numRedirects: 10,
     /** Nếu quá lâu không xong preroll, vẫn mở game */
-    maxPrerollMs: 90000
+    maxPrerollMs: 90000,
+    /** Mặc định muted — tăng tỷ lệ creative VPAID/linear chạy được */
+    startMuted: true
   };
 
   var overlayEl = null;
@@ -41,6 +55,10 @@
   var adsManager = null;
   var finishCb = null;
   var safetyTimer = null;
+  /** Trạng thái request hiện tại */
+  var requestMuted = true;
+  /** Sau lỗi VPAID trên HTTPS: thử lại với vpaid INSECURE (một số creative chỉ chạy ở chế độ này) */
+  var vpaidInsecureRetry = false;
 
   function slotSize() {
     var w = document.getElementById('gameWrapper');
@@ -60,7 +78,9 @@
     try {
       var VP = google.ima.ImaSdkSettings && google.ima.ImaSdkSettings.VpaidMode;
       if (!VP || !google.ima.settings.setVpaidMode) return;
-      var vm = String(CONFIG.vpaidMode || 'insecure').toLowerCase();
+      var vm = vpaidInsecureRetry
+        ? 'insecure'
+        : String(CONFIG.vpaidMode || 'insecure').toLowerCase();
       if (vm === 'disabled' && VP.DISABLED != null) {
         google.ima.settings.setVpaidMode(VP.DISABLED);
       } else if (vm === 'insecure' && VP.INSECURE != null) {
@@ -114,8 +134,12 @@
     overlayEl = document.getElementById('cool2funImaPreroll');
     if (overlayEl) {
       adContainer = document.getElementById('cool2funAdContainer');
-      adVideo = document.getElementById('cool2funAdVideo');
-      return;
+    adVideo = document.getElementById('cool2funAdVideo');
+    if (adVideo && CONFIG.startMuted) {
+      adVideo.muted = true;
+      adVideo.defaultMuted = true;
+    }
+    return;
     }
     overlayEl = document.createElement('div');
     overlayEl.id = 'cool2funImaPreroll';
@@ -123,19 +147,67 @@
     overlayEl.setAttribute('aria-hidden', 'true');
     overlayEl.innerHTML =
       '<div id="cool2funAdContainer" class="ima-ad-container">' +
-      '<video id="cool2funAdVideo" class="ima-ad-video" playsinline webkit-playsinline></video>' +
+      '<video id="cool2funAdVideo" class="ima-ad-video" playsinline webkit-playsinline muted></video>' +
       '</div>' +
       '<p class="ima-preroll-hint">Advertisement</p>';
     wrapper.appendChild(overlayEl);
     adContainer = document.getElementById('cool2funAdContainer');
     adVideo = document.getElementById('cool2funAdVideo');
+    if (adVideo && CONFIG.startMuted) {
+      adVideo.muted = true;
+      adVideo.defaultMuted = true;
+    }
+  }
+
+  function logAdError(er, prefix) {
+    var parts = [prefix || '[Cool2FunPreroll]'];
+    if (!er) {
+      console.warn(parts.join(' '));
+      return;
+    }
+    if (er.getMessage) parts.push(er.getMessage());
+    if (er.getErrorCode) parts.push('code=' + er.getErrorCode());
+    if (er.getErrorType) parts.push('type=' + er.getErrorType());
+    if (typeof er.getInnerError === 'function') {
+      try {
+        var inner = er.getInnerError();
+        if (inner) {
+          parts.push(
+            'inner=' +
+              (inner.getMessage
+                ? inner.getMessage()
+                : inner.toString && inner.toString())
+          );
+        }
+      } catch (ie) {}
+    }
+    console.warn(parts.join(' '));
+  }
+
+  function isLikelyVpaidFailure(er) {
+    if (!er || !er.getMessage) return false;
+    var m = String(er.getMessage()).toLowerCase();
+    return m.indexOf('vpaid') !== -1;
   }
 
   function onAdError(adErrorEvent) {
     try {
       var er = adErrorEvent.getError && adErrorEvent.getError();
-      var msg = er && er.getMessage ? er.getMessage() : String(er || adErrorEvent);
-      console.warn('[Cool2FunPreroll] Ad error:', msg);
+      logAdError(er, '[Cool2FunPreroll] Ad error');
+
+      if (
+        isLikelyVpaidFailure(er) &&
+        !vpaidInsecureRetry &&
+        typeof location !== 'undefined' &&
+        location.protocol === 'https:'
+      ) {
+        vpaidInsecureRetry = true;
+        teardownIma();
+        if (initLoader()) {
+          requestAd();
+          return;
+        }
+      }
     } catch (e) {}
     finish();
   }
@@ -147,6 +219,9 @@
   function onAdsManagerLoaded(adsManagerLoadedEvent) {
     var ars = new google.ima.AdsRenderingSettings();
     ars.loadVideoTimeout = CONFIG.loadVideoTimeout;
+    try {
+      ars.restoreCustomPlaybackStateOnAdBreakComplete = true;
+    } catch (e) {}
 
     try {
       adsManager = adsManagerLoadedEvent.getAdsManager(adVideo, ars);
@@ -199,15 +274,18 @@
     google.ima.settings.setNumRedirects(CONFIG.numRedirects);
     applyVpaidMode();
 
+    var vpmute = requestMuted ? '1' : '0';
+    var inner = buildInnerAdTag(vpmute);
+
     var adsRequest = new google.ima.AdsRequest();
-    adsRequest.adTagUrl = vastWrapperUrl();
+    adsRequest.adTagUrl = vastWrapperUrl(inner);
     adsRequest.linearAdSlotWidth = CONFIG.linearAdSlotWidth;
     adsRequest.linearAdSlotHeight = CONFIG.linearAdSlotHeight;
     adsRequest.nonLinearAdSlotWidth = CONFIG.nonLinearAdSlotWidth;
     adsRequest.nonLinearAdSlotHeight = CONFIG.nonLinearAdSlotHeight;
     adsRequest.vastLoadTimeout = CONFIG.vastLoadTimeout;
     adsRequest.adWillAutoPlay = true;
-    adsRequest.adWillPlayMuted = false;
+    adsRequest.adWillPlayMuted = requestMuted;
     adsRequest.continuousPlayback = false;
 
     try {
@@ -234,6 +312,8 @@
    */
   function runAfterPreroll(done) {
     finishCb = typeof done === 'function' ? done : function () {};
+    requestMuted = CONFIG.startMuted !== false;
+    vpaidInsecureRetry = false;
     var wrapper = document.getElementById('gameWrapper');
     if (!wrapper) {
       finishCb();
@@ -268,9 +348,11 @@
   window.Cool2FunPreroll = {
     runAfterPreroll: runAfterPreroll,
     /** Dùng nội bộ / đồng bộ với Unity ads.js */
-    getVastAdTagUrl: vastWrapperUrl,
-    getInnerGamTag: function () {
-      return INNER_AD_TAG;
+    getVastAdTagUrl: function () {
+      return vastWrapperUrl(buildInnerAdTag('1'));
+    },
+    getInnerGamTag: function (vpmute) {
+      return buildInnerAdTag(vpmute === '0' || vpmute === 0 ? '0' : '1');
     }
   };
 })();

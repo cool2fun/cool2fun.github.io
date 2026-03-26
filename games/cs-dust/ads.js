@@ -51,7 +51,7 @@
       CONFIG.sz +
       "&ciu_szs=" +
       CONFIG.ciu_szs +
-      "&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&vpos=preroll&vpmute=0&vpa=click&type=js&vad_type=linear";
+      "&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&vpos=preroll&vpmute=1&vpa=click&type=js&vad_type=linear";
     return (
       "https://tpc.googlesyndication.com/ima3vpaid?vad_format=linear&correlator=" +
       Date.now() +
@@ -116,6 +116,9 @@
       return false;
     }
 
+    adVideo.muted = true;
+    adVideo.defaultMuted = true;
+
     teardownIma();
 
     adDisplayContainer = new google.ima.AdDisplayContainer(adContainer, adVideo);
@@ -152,10 +155,13 @@
     adsRequest.nonLinearAdSlotHeight = CONFIG.nonLinearAdSlotHeight;
     adsRequest.vastLoadTimeout = CONFIG.vastLoadTimeout;
     adsRequest.adWillAutoPlay = true;
-    adsRequest.adWillPlayMuted = false;
+    adsRequest.adWillPlayMuted = true;
     adsRequest.continuousPlayback = false;
 
     try {
+      if (adDisplayContainer && adDisplayContainer.initialize) {
+        adDisplayContainer.initialize();
+      }
       adsLoader.requestAds(adsRequest);
     } catch (e) {
       console.error("[Ads] requestAds error:", e);
@@ -166,6 +172,9 @@
   function onAdsManagerLoaded(adsManagerLoadedEvent) {
     var ars = new google.ima.AdsRenderingSettings();
     ars.loadVideoTimeout = CONFIG.loadVideoTimeout;
+    try {
+      ars.restoreCustomPlaybackStateOnAdBreakComplete = true;
+    } catch (e) {}
 
     try {
       adsManager = adsManagerLoadedEvent.getAdsManager(adVideo, ars);
@@ -183,9 +192,6 @@
     var sz = slotSize();
 
     try {
-      if (adDisplayContainer && adDisplayContainer.initialize) {
-        adDisplayContainer.initialize();
-      }
       adContainer.style.display = "block";
       adsManager.init(sz.w, sz.h, google.ima.ViewMode.FULLSCREEN);
       adsManager.start();
