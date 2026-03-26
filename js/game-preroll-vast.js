@@ -1,11 +1,11 @@
 /**
- * IMA preroll for Cool2Fun play pages — VAST qua ima3vpaid + adtag GAM (appscript-ads-video).
- * Tag khớp: tpc.googlesyndication.com/ima3vpaid … cool2fun.github.io …
+ * IMA preroll — GAM VAST trực tiếp (không qua tpc/ima3vpaid → vpaid_adapter).
+ * Giảm lỗi 901/402 và TypeError dispose trên một số creative/line item.
  */
 (function () {
   'use strict';
 
-  /** vpmute=1 + adWillPlayMuted khớp nhau — giảm lỗi VPAID “unexpected error” khi autoplay */
+  /** Tham số GAM chuẩn cho video preroll (IMA requestAds adTagUrl). */
   function buildInnerAdTag(vpmute01) {
     return (
       'https://pubads.g.doubleclick.net/gampad/ads?iu=/23136362493/appscript-ads-video' +
@@ -19,12 +19,19 @@
     );
   }
 
+  /** VAST URL đưa thẳng vào IMA — thường nhận linear/MP4 thay vì buộc vpaid_adapter. */
+  function buildDirectAdTagUrl(vpmute01) {
+    return buildInnerAdTag(vpmute01) + '&impl=s&correlator=' + Date.now();
+  }
+
+  /** Tùy chọn: bọc ima3vpaid (chỉ bật nếu GAM bắt buộc tag kiểu đó). */
   function vastWrapperUrl(innerTag) {
+    var inner = innerTag || buildInnerAdTag('1');
     return (
       'https://tpc.googlesyndication.com/ima3vpaid?vad_format=linear&correlator=' +
       Date.now() +
       '&adtagurl=' +
-      encodeURIComponent(innerTag || buildInnerAdTag('1'))
+      encodeURIComponent(inner)
     );
   }
 
@@ -33,17 +40,17 @@
     linearAdSlotHeight: 480,
     nonLinearAdSlotWidth: 300,
     nonLinearAdSlotHeight: 600,
-    vastLoadTimeout: 60000,
-    loadVideoTimeout: 60000,
+    vastLoadTimeout: 120000,
+    /** Ms — tránh 402 “8 seconds” mặc định trên đường tải media */
+    loadVideoTimeout: 120000,
+    /** false = adTagUrl trực tiếp pubads (khuyến nghị). true = ima3vpaid wrapper. */
+    useImaVpaidWrapper: false,
     /**
-     * Trang HTTPS (GitHub Pages): ENABLED thường ổn hơn cho VPAID 2 trong secure context.
-     * File / local HTTP: insecure.
+     * VPAID: insecure thường ổn định hơn với mix creative; tránh dispose lỗi khi timeout.
      */
-    vpaidMode: typeof location !== 'undefined' && location.protocol === 'https:' ? 'enabled' : 'insecure',
+    vpaidMode: 'insecure',
     numRedirects: 10,
-    /** Nếu quá lâu không xong preroll, vẫn mở game */
-    maxPrerollMs: 90000,
-    /** Mặc định muted — tăng tỷ lệ creative VPAID/linear chạy được */
+    maxPrerollMs: 120000,
     startMuted: true
   };
 
@@ -57,9 +64,6 @@
   var safetyTimer = null;
   /** Trạng thái request hiện tại */
   var requestMuted = true;
-  /** Sau lỗi VPAID trên HTTPS: thử lại với vpaid INSECURE (một số creative chỉ chạy ở chế độ này) */
-  var vpaidInsecureRetry = false;
-
   function slotSize() {
     var w = document.getElementById('gameWrapper');
     if (w) {
@@ -78,9 +82,7 @@
     try {
       var VP = google.ima.ImaSdkSettings && google.ima.ImaSdkSettings.VpaidMode;
       if (!VP || !google.ima.settings.setVpaidMode) return;
-      var vm = vpaidInsecureRetry
-        ? 'insecure'
-        : String(CONFIG.vpaidMode || 'insecure').toLowerCase();
+      var vm = String(CONFIG.vpaidMode || 'insecure').toLowerCase();
       if (vm === 'disabled' && VP.DISABLED != null) {
         google.ima.settings.setVpaidMode(VP.DISABLED);
       } else if (vm === 'insecure' && VP.INSECURE != null) {
@@ -134,12 +136,12 @@
     overlayEl = document.getElementById('cool2funImaPreroll');
     if (overlayEl) {
       adContainer = document.getElementById('cool2funAdContainer');
-    adVideo = document.getElementById('cool2funAdVideo');
-    if (adVideo && CONFIG.startMuted) {
-      adVideo.muted = true;
-      adVideo.defaultMuted = true;
-    }
-    return;
+      adVideo = document.getElementById('cool2funAdVideo');
+      if (adVideo && CONFIG.startMuted) {
+        adVideo.muted = true;
+        adVideo.defaultMuted = true;
+      }
+      return;
     }
     overlayEl = document.createElement('div');
     overlayEl.id = 'cool2funImaPreroll';
@@ -184,30 +186,10 @@
     console.warn(parts.join(' '));
   }
 
-  function isLikelyVpaidFailure(er) {
-    if (!er || !er.getMessage) return false;
-    var m = String(er.getMessage()).toLowerCase();
-    return m.indexOf('vpaid') !== -1;
-  }
-
   function onAdError(adErrorEvent) {
     try {
       var er = adErrorEvent.getError && adErrorEvent.getError();
       logAdError(er, '[Cool2FunPreroll] Ad error');
-
-      if (
-        isLikelyVpaidFailure(er) &&
-        !vpaidInsecureRetry &&
-        typeof location !== 'undefined' &&
-        location.protocol === 'https:'
-      ) {
-        vpaidInsecureRetry = true;
-        teardownIma();
-        if (initLoader()) {
-          requestAd();
-          return;
-        }
-      }
     } catch (e) {}
     finish();
   }
@@ -275,10 +257,12 @@
     applyVpaidMode();
 
     var vpmute = requestMuted ? '1' : '0';
-    var inner = buildInnerAdTag(vpmute);
 
     var adsRequest = new google.ima.AdsRequest();
-    adsRequest.adTagUrl = vastWrapperUrl(inner);
+    adsRequest.adTagUrl =
+      CONFIG.useImaVpaidWrapper === true
+        ? vastWrapperUrl(buildInnerAdTag(vpmute))
+        : buildDirectAdTagUrl(vpmute);
     adsRequest.linearAdSlotWidth = CONFIG.linearAdSlotWidth;
     adsRequest.linearAdSlotHeight = CONFIG.linearAdSlotHeight;
     adsRequest.nonLinearAdSlotWidth = CONFIG.nonLinearAdSlotWidth;
@@ -313,7 +297,6 @@
   function runAfterPreroll(done) {
     finishCb = typeof done === 'function' ? done : function () {};
     requestMuted = CONFIG.startMuted !== false;
-    vpaidInsecureRetry = false;
     var wrapper = document.getElementById('gameWrapper');
     if (!wrapper) {
       finishCb();
@@ -347,12 +330,14 @@
 
   window.Cool2FunPreroll = {
     runAfterPreroll: runAfterPreroll,
-    /** Dùng nội bộ / đồng bộ với Unity ads.js */
     getVastAdTagUrl: function () {
-      return vastWrapperUrl(buildInnerAdTag('1'));
+      return buildDirectAdTagUrl('1');
     },
     getInnerGamTag: function (vpmute) {
       return buildInnerAdTag(vpmute === '0' || vpmute === 0 ? '0' : '1');
+    },
+    getWrappedVastAdTagUrl: function () {
+      return vastWrapperUrl(buildInnerAdTag('1'));
     }
   };
 })();

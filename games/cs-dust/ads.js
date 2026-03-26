@@ -25,16 +25,16 @@
     linearAdSlotHeight: 480,
     nonLinearAdSlotWidth: 300,
     nonLinearAdSlotHeight: 600,
-    vastLoadTimeout: 60000,
-    loadVideoTimeout: 60000,
-    /** insecure | enabled | disabled — trang thường (GitHub Pages) thường dùng insecure */
+    vastLoadTimeout: 120000,
+    loadVideoTimeout: 120000,
+    /** insecure | enabled | disabled */
     vpaidMode: "insecure",
     numRedirects: 10
   };
 
-  /** Cùng tag VAST ima3vpaid + GAM như trang play Cool2Fun */
+  /** VAST trực tiếp GAM (không ima3vpaid) — đồng bộ game-preroll-vast.js */
   function getAdTagUrl() {
-    var inner =
+    return (
       "https://pubads.g.doubleclick.net/gampad/ads?iu=" +
       CONFIG.adUnitPath +
       "&description_url=" +
@@ -51,12 +51,8 @@
       CONFIG.sz +
       "&ciu_szs=" +
       CONFIG.ciu_szs +
-      "&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&vpos=preroll&vpmute=1&vpa=click&type=js&vad_type=linear";
-    return (
-      "https://tpc.googlesyndication.com/ima3vpaid?vad_format=linear&correlator=" +
-      Date.now() +
-      "&adtagurl=" +
-      encodeURIComponent(inner)
+      "&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&vpos=preroll&vpmute=1&vpa=click&type=js&vad_type=linear&impl=s&correlator=" +
+      Date.now()
     );
   }
 
