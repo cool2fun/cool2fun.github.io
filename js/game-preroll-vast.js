@@ -1,7 +1,4 @@
-/**
- * IMA preroll — GAM VAST trực tiếp (không qua tpc/ima3vpaid → vpaid_adapter).
- * Giảm lỗi 901/402 và TypeError dispose trên một số creative/line item.
- */
+/** IMA preroll — một adTagUrl GAM (pubads) cho ADS-VIDEO-Cool2fun. */
 (function () {
   'use strict';
 
@@ -18,20 +15,9 @@
     );
   }
 
-  /** adTagUrl đầy đủ gửi IMA (correlator chống cache). */
+  /** adTagUrl gửi IMA (correlator chống cache). */
   function buildDirectAdTagUrl() {
     return buildGamAdTagBase() + Date.now();
-  }
-
-  /** Bọc ima3vpaid (ít dùng). inner = URL pubads đầy đủ hoặc base. */
-  function vastWrapperUrl(innerTag) {
-    var inner = innerTag || buildGamAdTagBase() + Date.now();
-    return (
-      'https://tpc.googlesyndication.com/ima3vpaid?vad_format=linear&correlator=' +
-      Date.now() +
-      '&adtagurl=' +
-      encodeURIComponent(inner)
-    );
   }
 
   var CONFIG = {
@@ -42,11 +28,6 @@
     vastLoadTimeout: 120000,
     /** Ms — tránh 402 “8 seconds” mặc định trên đường tải media */
     loadVideoTimeout: 120000,
-    /** false = adTagUrl trực tiếp pubads (khuyến nghị). true = ima3vpaid wrapper. */
-    useImaVpaidWrapper: false,
-    /**
-     * VPAID: insecure thường ổn định hơn với mix creative; tránh dispose lỗi khi timeout.
-     */
     vpaidMode: 'insecure',
     /** Giới hạn chuỗi VAST wrapper — google.ima.settings.setNumRedirects (tối đa 5 lớp). */
     numRedirects: 5,
@@ -259,10 +240,7 @@
     applyVpaidMode();
 
     var adsRequest = new google.ima.AdsRequest();
-    adsRequest.adTagUrl =
-      CONFIG.useImaVpaidWrapper === true
-        ? vastWrapperUrl(buildGamAdTagBase() + Date.now())
-        : buildDirectAdTagUrl();
+    adsRequest.adTagUrl = buildDirectAdTagUrl();
     adsRequest.linearAdSlotWidth = CONFIG.linearAdSlotWidth;
     adsRequest.linearAdSlotHeight = CONFIG.linearAdSlotHeight;
     adsRequest.nonLinearAdSlotWidth = CONFIG.nonLinearAdSlotWidth;
@@ -329,15 +307,6 @@
   }
 
   window.Cool2FunPreroll = {
-    runAfterPreroll: runAfterPreroll,
-    getVastAdTagUrl: function () {
-      return buildDirectAdTagUrl();
-    },
-    getGamAdTagBase: function () {
-      return buildGamAdTagBase();
-    },
-    getWrappedVastAdTagUrl: function () {
-      return vastWrapperUrl(buildGamAdTagBase() + Date.now());
-    }
+    runAfterPreroll: runAfterPreroll
   };
 })();
