@@ -1,6 +1,7 @@
 {
   "_cool2funVastIma": {
-    "adUnitPath": "/23136362493/appscript-ads-video",
+    "adUnitPath": "/23136362493/ADS-VIDEO-Cool2fun",
+    "vastWrapperMaxDepth": 5,
     "descriptionUrl": "https://cool2fun.github.io/",
     "wrapper": "https://tpc.googlesyndication.com/ima3vpaid?vad_format=linear",
     "code": "js/game-preroll-vast.js",

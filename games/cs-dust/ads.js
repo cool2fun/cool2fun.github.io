@@ -1,6 +1,6 @@
 /**
  * IMA wrapper — CS Dust (Unity WebGL)
- * Cấu hình đồng bộ tag với Apps Script test (appscript-ads-video + cool2fun description_url).
+ * Đồng bộ tag với js/game-preroll-vast.js (ADS-VIDEO-Cool2fun).
  */
 
 (function () {
@@ -8,8 +8,7 @@
 
   // ============== CONFIG (sửa tại đây) ==============
   var CONFIG = {
-    /** Đường dẫn ad unit GAM — khớp test-ima-vast.gs / code.gs */
-    adUnitPath: "/23136362493/appscript-ads-video",
+    adUnitPath: "/23136362493/ADS-VIDEO-Cool2fun",
     /**
      * description_url chuỗi tuyệt đối (Google khuyến nghị HTTPS).
      * Đặt true để dùng trang hiện tại: encodeURIComponent(location.href)
@@ -17,7 +16,6 @@
     usePageAsDescriptionUrl: false,
     descriptionUrl: "https://cool2fun.github.io/",
     sz: "640x480",
-    ciu_szs: "160x600%2C300x600",
     tfcd: "0",
     npa: "0",
     /** Khớp Linear slot trong IMA AdsRequest với tham số sz trên tag */
@@ -29,10 +27,10 @@
     loadVideoTimeout: 120000,
     /** insecure | enabled | disabled */
     vpaidMode: "insecure",
-    numRedirects: 10
+    numRedirects: 5
   };
 
-  /** VAST trực tiếp GAM (không ima3vpaid) — đồng bộ game-preroll-vast.js */
+  /** VAST trực tiếp GAM — cùng tham số với game-preroll-vast.js */
   function getAdTagUrl() {
     return (
       "https://pubads.g.doubleclick.net/gampad/ads?iu=" +
@@ -49,9 +47,7 @@
       CONFIG.npa +
       "&sz=" +
       CONFIG.sz +
-      "&ciu_szs=" +
-      CONFIG.ciu_szs +
-      "&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&vpos=preroll&vpmute=1&vpa=click&type=js&vad_type=linear&impl=s&correlator=" +
+      "&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&correlator=" +
       Date.now()
     );
   }
@@ -140,7 +136,9 @@
       return;
     }
 
-    google.ima.settings.setNumRedirects(CONFIG.numRedirects);
+    try {
+      google.ima.settings.setNumRedirects(CONFIG.numRedirects);
+    } catch (e) {}
     applyVpaidMode();
 
     var adsRequest = new google.ima.AdsRequest();

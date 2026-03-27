@@ -24,7 +24,7 @@
   </header>
   <main class="vsi-box">
     <h1>IMA Video Suite Inspector</h1>
-    <p>Tag GAM video trùng với <code>js/game-preroll-vast.js</code> (VAST trực tiếp <code>pubads</code> + <code>impl=s</code> + <code>correlator</code>).</p>
+    <p>Tag GAM <code>ADS-VIDEO-Cool2fun</code> trùng <code>js/game-preroll-vast.js</code> (<code>setNumRedirects(5)</code> trên site).</p>
     <div class="vsi-actions">
       <a id="linkGithubVsi" href="#" target="_blank" rel="noopener">Mở VSI (GitHub)</a>
       <a id="linkGoogleVsi" class="secondary" href="#" target="_blank" rel="noopener">Mở VSI (Google Developers)</a>
@@ -38,11 +38,10 @@
     (function () {
       function buildCool2FunGamTag() {
         return (
-          'https://pubads.g.doubleclick.net/gampad/ads?iu=/23136362493/appscript-ads-video' +
+          'https://pubads.g.doubleclick.net/gampad/ads?iu=/23136362493/ADS-VIDEO-Cool2fun' +
           '&description_url=' + encodeURIComponent('https://cool2fun.github.io/') +
-          '&tfcd=0&npa=0&sz=640x480&ciu_szs=' + encodeURIComponent('160x600,300x600') +
-          '&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&vpos=preroll&vpmute=1&vpa=click&type=js&vad_type=linear' +
-          '&impl=s&correlator=' + Date.now()
+          '&tfcd=0&npa=0&sz=640x480&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&correlator=' +
+          Date.now()
         );
       }
       var tag = buildCool2FunGamTag();

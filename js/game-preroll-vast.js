@@ -5,28 +5,27 @@
 (function () {
   'use strict';
 
-  /** Tham số GAM chuẩn cho video preroll (IMA requestAds adTagUrl). */
-  function buildInnerAdTag(vpmute01) {
+  /**
+   * Tag GAM video (ADS-VIDEO-Cool2fun) — khớp inventory mới.
+   * correlator= để trống trong base; luôn nối timestamp khi request.
+   */
+  function buildGamAdTagBase() {
     return (
-      'https://pubads.g.doubleclick.net/gampad/ads?iu=/23136362493/appscript-ads-video' +
+      'https://pubads.g.doubleclick.net/gampad/ads?iu=/23136362493/ADS-VIDEO-Cool2fun' +
       '&description_url=' +
       encodeURIComponent('https://cool2fun.github.io/') +
-      '&tfcd=0&npa=0&sz=640x480&ciu_szs=' +
-      encodeURIComponent('160x600,300x600') +
-      '&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&vpos=preroll&vpmute=' +
-      vpmute01 +
-      '&vpa=click&type=js&vad_type=linear'
+      '&tfcd=0&npa=0&sz=640x480&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&correlator='
     );
   }
 
-  /** VAST URL đưa thẳng vào IMA — thường nhận linear/MP4 thay vì buộc vpaid_adapter. */
-  function buildDirectAdTagUrl(vpmute01) {
-    return buildInnerAdTag(vpmute01) + '&impl=s&correlator=' + Date.now();
+  /** adTagUrl đầy đủ gửi IMA (correlator chống cache). */
+  function buildDirectAdTagUrl() {
+    return buildGamAdTagBase() + Date.now();
   }
 
-  /** Tùy chọn: bọc ima3vpaid (chỉ bật nếu GAM bắt buộc tag kiểu đó). */
+  /** Bọc ima3vpaid (ít dùng). inner = URL pubads đầy đủ hoặc base. */
   function vastWrapperUrl(innerTag) {
-    var inner = innerTag || buildInnerAdTag('1');
+    var inner = innerTag || buildGamAdTagBase() + Date.now();
     return (
       'https://tpc.googlesyndication.com/ima3vpaid?vad_format=linear&correlator=' +
       Date.now() +
@@ -49,7 +48,8 @@
      * VPAID: insecure thường ổn định hơn với mix creative; tránh dispose lỗi khi timeout.
      */
     vpaidMode: 'insecure',
-    numRedirects: 10,
+    /** Giới hạn chuỗi VAST wrapper — google.ima.settings.setNumRedirects (tối đa 5 lớp). */
+    numRedirects: 5,
     maxPrerollMs: 120000,
     startMuted: true
   };
@@ -253,16 +253,16 @@
   }
 
   function requestAd() {
-    google.ima.settings.setNumRedirects(CONFIG.numRedirects);
+    try {
+      google.ima.settings.setNumRedirects(CONFIG.numRedirects);
+    } catch (e) {}
     applyVpaidMode();
-
-    var vpmute = requestMuted ? '1' : '0';
 
     var adsRequest = new google.ima.AdsRequest();
     adsRequest.adTagUrl =
       CONFIG.useImaVpaidWrapper === true
-        ? vastWrapperUrl(buildInnerAdTag(vpmute))
-        : buildDirectAdTagUrl(vpmute);
+        ? vastWrapperUrl(buildGamAdTagBase() + Date.now())
+        : buildDirectAdTagUrl();
     adsRequest.linearAdSlotWidth = CONFIG.linearAdSlotWidth;
     adsRequest.linearAdSlotHeight = CONFIG.linearAdSlotHeight;
     adsRequest.nonLinearAdSlotWidth = CONFIG.nonLinearAdSlotWidth;
@@ -331,13 +331,13 @@
   window.Cool2FunPreroll = {
     runAfterPreroll: runAfterPreroll,
     getVastAdTagUrl: function () {
-      return buildDirectAdTagUrl('1');
+      return buildDirectAdTagUrl();
     },
-    getInnerGamTag: function (vpmute) {
-      return buildInnerAdTag(vpmute === '0' || vpmute === 0 ? '0' : '1');
+    getGamAdTagBase: function () {
+      return buildGamAdTagBase();
     },
     getWrappedVastAdTagUrl: function () {
-      return vastWrapperUrl(buildInnerAdTag('1'));
+      return vastWrapperUrl(buildGamAdTagBase() + Date.now());
     }
   };
 })();
