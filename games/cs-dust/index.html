@@ -43,15 +43,6 @@
 		#unity-progress-bar-empty { width: 141px; height: 18px; margin-top: 10px; background: url('TemplateData/progress-bar-empty-dark.png') no-repeat center }
 		#unity-progress-bar-full { width: 0%; height: 18px; margin-top: 10px; background: url('TemplateData/progress-bar-full-dark.png') no-repeat center }
 
-		#adContainer {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			z-index: 9999;
-			display: none;
-		}
 	</style>
 	<script src="vendor/prevent-keys.js"></script>
 	<script>
@@ -65,11 +56,6 @@
 </head>
 
 <body>
-	<!-- Ad overlay -->
-	<div id="adContainer">
-		<video id="adVideo" playsinline muted></video>
-	</div>
-
 	<div id="gameContainer">
 		<canvas id="unity-canvas" data-pixel-art=""></canvas>
 		<div id="unity-loading-bar">
@@ -79,16 +65,8 @@
 			</div>
 		</div>
 
-		<!-- 1. IMA SDK -->
-		<script src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
-
-		<!-- 2. Ads wrapper -->
 		<script src="ads.js"></script>
-
-		<!-- 3. Unity Loader -->
 		<script src="Build/CSDust.loader.js"></script>
-
-		<!-- 4. Game init -->
 		<script>
 			var loadingBar = document.querySelector("#unity-loading-bar");
 			var progressBarFull = document.querySelector("#unity-progress-bar-full");
@@ -139,9 +117,8 @@
 				logo.style.top = Math.floor((h - 130) / 3) + "px";
 			}
 
-			// Pre-roll ad → ad xong → load game
 			var myGameInstance = null;
-			AdsManager.showPreroll(function() {
+			AdsManager.showPreroll(function () {
 				createUnityInstance(canvas, config, progressHandler).then(function (instance) {
 					loadingBar.style.display = 'none';
 					myGameInstance = instance;
