@@ -7,12 +7,12 @@ interface AdFrameProps {
 }
 
 const frameConfig: Record<string, { src: string; width: string; height: string }> = {
-  autu: { src: '/ads/autu', width: '970px', height: '250px' },
-  '970-90': { src: '/ads/970-90', width: '728px', height: '90px' },
+  autu: { src: '/ads/autu.html', width: '970px', height: '250px' },
+  '970-90': { src: '/ads/970-90.html', width: '728px', height: '90px' },
 };
 
 export default function AdFrame({ slot, width, height }: AdFrameProps) {
-  const cfg = frameConfig[slot] || { src: '/ads/autu', width: '970px', height: '250px' };
+  const cfg = frameConfig[slot] || { src: '/ads/autu.html', width: '970px', height: '250px' };
   return (
     <div className={`ad-slot ${styles.frameWrapper}`} style={{ width: width || cfg.width, height: height || cfg.height }}>
       <iframe
