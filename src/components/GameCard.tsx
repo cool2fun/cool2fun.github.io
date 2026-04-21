@@ -13,7 +13,7 @@ export default function GameCard({ game, sidebar = false }: GameCardProps) {
       <Link href={`/${game.slug}`} aria-label={`Play ${game.name} unblocked`}>
         <div className="card-thumb">
           <img
-            src={`/image/${game.slug}.png`}
+            src={`/${game.slug}.png`}
             alt={`${game.name} unblocked`}
             width={sidebar ? 100 : 220}
             height={sidebar ? 70 : 150}
