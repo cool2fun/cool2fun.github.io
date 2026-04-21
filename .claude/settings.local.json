@@ -27,7 +27,13 @@
       "Bash(curl -s \"https://api.github.com/repos/cool2fun/cool2fun.github.io/actions/runs/24735335122\")",
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('Status:', d.get\\('status'\\)\\); print\\('Conclusion:', d.get\\('conclusion'\\)\\); print\\('Run started:', d.get\\('run_started_at'\\)\\)\")",
       "Bash(git add *)",
-      "Bash(git reset *)"
+      "Bash(git reset *)",
+      "Bash(git rm *)",
+      "Bash(git checkout *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git ls-tree *)",
+      "Bash(git push *)",
+      "Bash(curl -s \"https://api.github.com/repos/cool2fun/cool2fun.github.io/pages\")"
     ]
   }
 }
