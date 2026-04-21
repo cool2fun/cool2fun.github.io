@@ -33,7 +33,12 @@
       "Bash(git commit -m ' *)",
       "Bash(git ls-tree *)",
       "Bash(git push *)",
-      "Bash(curl -s \"https://api.github.com/repos/cool2fun/cool2fun.github.io/pages\")"
+      "Bash(curl -s \"https://api.github.com/repos/cool2fun/cool2fun.github.io/pages\")",
+      "Bash(curl -sI https://cool2fun.github.io)",
+      "Bash(curl -s \"https://api.github.com/repos/cool2fun/cool2fun.github.io/actions/runs?per_page=3\")",
+      "Bash(curl -s \"https://api.github.com/repos/cool2fun/cool2fun.github.io/actions/workflows/deploy.yml/runs?per_page=5\")",
+      "Bash(curl -s \"https://api.github.com/repos/cool2fun/cool2fun.github.io/actions/runs/24736253352/jobs\")",
+      "Bash(curl -s \"https://api.github.com/repos/cool2fun/cool2fun.github.io/actions/runs/24736253352/logs\")"
     ]
   }
 }
