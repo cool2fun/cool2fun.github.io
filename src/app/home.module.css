@@ -1,0 +1,11 @@
+.adTop {
+  display: flex;
+  justify-content: center;
+  margin: 1rem auto;
+}
+
+.adBottom {
+  display: flex;
+  justify-content: center;
+  margin: 1rem auto;
+}

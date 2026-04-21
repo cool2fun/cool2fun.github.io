@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx --yes create-next-app@latest cool2fun-next --typescript --app --no-tailwind --no-eslint --src-dir --import-alias \"@/*\" --no-turbopack)",
+      "Bash(mkdir -p cool2fun-next/public/image cool2fun-next/public/games)",
+      "Bash(cp image/*.png cool2fun-next/public/image/)",
+      "Bash(cp -r games/* cool2fun-next/public/games/)",
+      "Bash(cp robots.txt ads.txt cool2fun-next/public/)",
+      "Bash(rm cool2fun-next/src/app/ads/\\\\[slot\\\\]/page.tsx)",
+      "Bash(rmdir \"cool2fun-next/src/app/ads/\\\\[slot\\\\]\")",
+      "Bash(rm cool2fun-next/src/app/globals.css cool2fun-next/src/app/page.module.css cool2fun-next/src/app/\\\\[slot\\\\]/page.tsx)",
+      "Bash(rmdir \"cool2fun-next/src/app/\\\\[slot\\\\]\")",
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:3001/)",
+      "Bash(curl -s http://localhost:3001/slope)",
+      "Bash(curl -s http://localhost:3001/category)",
+      "Bash(curl -s http://localhost:3001/ads/autu.html)",
+      "Bash(taskkill //F //IM node.exe)",
+      "Bash(cp -r cool2fun-next/public/image/ public/)",
+      "Bash(cp -r cool2fun-next/public/games/ public/)",
+      "Bash(npx next *)",
+      "Bash(npm install *)"
+    ]
+  }
+}
