@@ -105,7 +105,7 @@
         "transform": "lodash/{{member}}"
       }
     },
-    "outputFileTracingRoot": "C:\\Users\\ngocl\\Documents\\GitHub\\cool2fun.github.io",
+    "outputFileTracingRoot": "c:\\Users\\ngocl\\Documents\\GitHub\\cool2fun.github.io",
     "cacheComponents": false,
     "cacheLife": {
       "default": {
@@ -305,11 +305,11 @@
     "bundlePagesRouterDependencies": false,
     "configFileName": "next.config.ts",
     "turbopack": {
-      "root": "C:\\Users\\ngocl\\Documents\\GitHub\\cool2fun.github.io"
+      "root": "c:\\Users\\ngocl\\Documents\\GitHub\\cool2fun.github.io"
     },
     "distDirRoot": ".next"
   },
-  "appDir": "C:\\Users\\ngocl\\Documents\\GitHub\\cool2fun.github.io",
+  "appDir": "c:\\Users\\ngocl\\Documents\\GitHub\\cool2fun.github.io",
   "relativeAppDir": "",
   "files": [
     ".next\\routes-manifest.json",

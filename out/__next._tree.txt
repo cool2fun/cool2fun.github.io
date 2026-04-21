@@ -1,4 +1,4 @@
 :HL["/_next/static/chunks/118.yp9x8ss4z.css","style"]
 :HL["/_next/static/chunks/09urk08by5_v0.css","style"]
 :HL["https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"Vh7Kh-NO_Z_4ATj0Uvh0w"}
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"KAewmgtOqLP2VKq4rtg4Z"}
