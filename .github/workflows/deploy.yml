@@ -49,79 +49,36 @@ jobs:
 
       - name: Generate sitemap
         run: |
-          node << 'EOF'
-          const fs = require('fs');
-          const path = require('path');
-
-          // Read games from data file
-          const dataFile = fs.readFileSync('src/data/games.ts', 'utf8');
-          const slugs = [...new Set(
-            [...dataFile.matchAll(/slug:\s*"([^"]+)"/g)].map(m => m[1])
-          )];
+          node -e "
+          var fs = require('fs');
+          var dataFile = fs.readFileSync('src/data/games.ts', 'utf8');
+          var slugs = [...new Set([...dataFile.matchAll(/slug:\\s*\"([^\"]+)\"/g)].map(function(m){return m[1]}))];
           console.log('Found', slugs.length, 'games');
-
-          const base = 'https://cool2fun.github.io';
-          const today = new Date().toISOString().split('T')[0];
-
-          const staticPages = [
-            { loc: base + '/', priority: '1.0', freq: 'daily' },
-            { loc: base + '/category/', priority: '0.8', freq: 'weekly' },
-            { loc: base + '/about-us/', priority: '0.4', freq: 'monthly' },
-            { loc: base + '/privacy-policy/', priority: '0.4', freq: 'monthly' },
-            { loc: base + '/terms-of-use/', priority: '0.4', freq: 'monthly' },
-            { loc: base + '/contact/', priority: '0.4', freq: 'monthly' },
+          var base = 'https://cool2fun.github.io';
+          var today = new Date().toISOString().split('T')[0];
+          var staticPages = [
+            {loc: base+'/', priority: '1.0', freq: 'daily'},
+            {loc: base+'/category/', priority: '0.8', freq: 'weekly'},
+            {loc: base+'/about-us/', priority: '0.4', freq: 'monthly'},
+            {loc: base+'/privacy-policy/', priority: '0.4', freq: 'monthly'},
+            {loc: base+'/terms-of-use/', priority: '0.4', freq: 'monthly'},
+            {loc: base+'/contact/', priority: '0.4', freq: 'monthly'}
           ];
-
-          const topGames = ['slope','run-3','subway-surfers','drive-mad','retro-bowl','monkey-mart'];
-          const gamePages = slugs.map(slug => ({
-            loc: base + '/' + slug + '/',
-            priority: topGames.includes(slug) ? '0.9' : '0.7',
-            freq: 'monthly',
-          }));
-
-          const all = [...staticPages, ...gamePages];
-
-          const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${all.map(u => `  <url>
-    <loc>${u.loc}</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>${u.freq}</changefreq>
-    <priority>${u.priority}</priority>
-  </url>`).join('\n')}
-</urlset>`;
-
-          const robots = `User-agent: *
-Allow: /
-
-User-agent: Mediapartners-Google
-Allow: /
-
-User-agent: AdsBot-Google
-Allow: /
-
-User-agent: AhrefsBot
-Crawl-delay: 10
-
-User-agent: SemrushBot
-Crawl-delay: 10
-
-Sitemap: ${base}/sitemap.xml
-`;
-
-          fs.writeFileSync('out/sitemap.xml', sitemap);
-          fs.writeFileSync('out/robots.txt', robots);
-          console.log('Sitemap and robots.txt generated in out/');
-          EOF
+          var topGames = ['slope','run-3','subway-surfers','drive-mad','retro-bowl','monkey-mart'];
+          var gamePages = slugs.map(function(slug){return {loc: base+'/'+slug+'/', priority: topGames.indexOf(slug)!==-1?'0.9':'0.7', freq:'monthly'}});
+          var all = staticPages.concat(gamePages);
+          var xml = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\\n';
+          all.forEach(function(u){
+            xml += '  <url>\\n    <loc>'+u.loc+'</loc>\\n    <lastmod>'+today+'</lastmod>\\n    <changefreq>'+u.freq+'</changefreq>\\n    <priority>'+u.priority+'</priority>\\n  </url>\\n';
+          });
+          xml += '</urlset>';
+          fs.writeFileSync('out/sitemap.xml', xml);
+          fs.writeFileSync('out/robots.txt', 'User-agent: *\\nAllow: /\\n\\nSitemap: '+base+'/sitemap.xml\\n');
+          console.log('Done');
+          "
 
       - name: Upload sitemap
         uses: actions/upload-pages-artifact@v3
         with:
           path: out/sitemap.xml
-          retention-days: 1
-
-      - name: Upload robots
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: out/robots.txt
           retention-days: 1
