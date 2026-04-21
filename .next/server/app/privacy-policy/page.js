@@ -2,7 +2,7 @@ var R=require("../../chunks/ssr/[turbopack]_runtime.js")("server/app/privacy-pol
 R.c("server/chunks/ssr/[root-of-the-server]__0ui6a07._.js")
 R.c("server/chunks/ssr/node_modules_next_dist_0jk5ehi._.js")
 R.c("server/chunks/ssr/node_modules_next_dist_esm_build_templates_app-page_0t_vyhp.js")
-R.c("server/chunks/ssr/[root-of-the-server]__0mmnj9t._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__0ffx97n._.js")
 R.c("server/chunks/ssr/[root-of-the-server]__09z7o2x._.js")
 R.c("server/chunks/ssr/_009kkov._.js")
 R.c("server/chunks/ssr/src_app_not-found_tsx_0qa9_0~._.js")

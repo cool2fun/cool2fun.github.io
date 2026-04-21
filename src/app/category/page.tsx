@@ -1,32 +1,23 @@
+'use client';
+
+import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
-import type { Metadata } from 'next';
 import { games, getGamesByCategory } from '@/data/games';
 import GameGrid from '@/components/GameGrid';
-import styles from './category.module.css';
 
-interface PageProps {
-  searchParams: Promise<{ cat?: string }>;
-}
-
-export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
-  const { cat } = await searchParams;
-  if (cat) {
-    return {
-      title: `${cat} Games Unblocked - Cool2Fun`,
-      description: `Play free ${cat} unblocked games on Cool2Fun. No downloads!`,
-    };
-  }
-  return { title: 'All Games - Cool2Fun' };
-}
-
-export default async function CategoryPage({ searchParams }: PageProps) {
-  const { cat } = await searchParams;
+function CategoryContent() {
+  const searchParams = useSearchParams();
+  const cat = searchParams.get('cat') || '';
   const filtered = cat ? getGamesByCategory(cat) : games;
   const title = cat ? `${cat} Games` : 'All Unblocked Games';
 
+  return <GameGrid games={filtered} title={title} />;
+}
+
+export default function CategoryPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <GameGrid games={filtered} title={title} />
+    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Loading...</div>}>
+      <CategoryContent />
     </Suspense>
   );
 }
