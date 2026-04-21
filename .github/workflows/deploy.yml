@@ -15,11 +15,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: https://cool2fun.github.io
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -37,18 +34,6 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: out
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
 
       - name: Generate sitemap
         run: |
@@ -70,18 +55,20 @@ jobs:
           var topGames = ['slope','run-3','subway-surfers','drive-mad','retro-bowl','monkey-mart'];
           var gamePages = slugs.map(function(slug){return {loc: base+'/'+slug+'/', priority: topGames.indexOf(slug)!==-1?'0.9':'0.7', freq:'monthly'}});
           var all = staticPages.concat(gamePages);
-          var xml = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\\n';
+          var xml = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n';
           all.forEach(function(u){
-            xml += '  <url>\\n    <loc>'+u.loc+'</loc>\\n    <lastmod>'+today+'</lastmod>\\n    <changefreq>'+u.freq+'</changefreq>\\n    <priority>'+u.priority+'</priority>\\n  </url>\\n';
+            xml += '  <url>\n    <loc>'+u.loc+'</loc>\n    <lastmod>'+today+'</lastmod>\n    <changefreq>'+u.freq+'</changefreq>\n    <priority>'+u.priority+'</priority>\n  </url>\n';
           });
           xml += '</urlset>';
           fs.writeFileSync('out/sitemap.xml', xml);
-          fs.writeFileSync('out/robots.txt', 'User-agent: *\\nAllow: /\\n\\nSitemap: '+base+'/sitemap.xml\\n');
+          fs.writeFileSync('out/robots.txt', 'User-agent: *\nAllow: /\n\nSitemap: '+base+'/sitemap.xml\n');
           console.log('Done');
           "
 
-      - name: Upload sitemap
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: out/sitemap.xml
-          retention-days: 1
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
+          publish_branch: gh-pages
+          force_orphan: true
