@@ -1,3 +1,0 @@
-module.exports=[3363,a=>{"use strict";var b=a.i(7997),c=a.i(95936);a.s(["default",0,function(){return(0,b.jsxs)("div",{className:"not-found",children:[(0,b.jsx)("h1",{children:"404"}),(0,b.jsx)("h2",{style:{fontSize:"1.5rem",margin:".5rem 0",color:"#333"},children:"Page Not Found"}),(0,b.jsx)("p",{children:"The game or page you're looking for doesn't exist."}),(0,b.jsxs)(c.default,{href:"/",className:"play-btn",style:{maxWidth:"200px",margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"center",gap:"0.4rem"},children:[(0,b.jsx)("i",{className:"fas fa-home"})," Back to Games"]})]})}])},17537,a=>{a.n(a.i(3363))}];
-
-//# sourceMappingURL=src_app_not-found_tsx_0qa9_0~._.js.map
