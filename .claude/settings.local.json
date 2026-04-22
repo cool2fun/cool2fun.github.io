@@ -43,7 +43,10 @@
       "Bash(git stash *)",
       "Bash(node -e ' *)",
       "Bash(curl -sI https://cool2fun.github.io/sitemap.xml)",
-      "Bash(curl -sI https://cool2fun.github.io/)"
+      "Bash(curl -sI https://cool2fun.github.io/)",
+      "Bash(curl -sI \"https://cool2fun.github.io/robots.txt\")",
+      "Bash(curl -sI \"https://cool2fun.github.io/sitemap.xml\")",
+      "Bash(git commit *)"
     ]
   }
 }
