@@ -41,7 +41,9 @@
       "Bash(curl -s \"https://api.github.com/repos/cool2fun/cool2fun.github.io/actions/runs/24736253352/logs\")",
       "Bash(git pull *)",
       "Bash(git stash *)",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(curl -sI https://cool2fun.github.io/sitemap.xml)",
+      "Bash(curl -sI https://cool2fun.github.io/)"
     ]
   }
 }
