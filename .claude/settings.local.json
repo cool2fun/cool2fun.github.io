@@ -46,7 +46,11 @@
       "Bash(curl -sI https://cool2fun.github.io/)",
       "Bash(curl -sI \"https://cool2fun.github.io/robots.txt\")",
       "Bash(curl -sI \"https://cool2fun.github.io/sitemap.xml\")",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(git fetch *)",
+      "Bash(curl -s \"https://cool2fun.github.io/sitemap.xml\")",
+      "Bash(curl -sH \"Cache-Control: no-cache\" \"https://cool2fun.github.io/sitemap.xml\")",
+      "Bash(curl -s \"https://raw.githubusercontent.com/cool2fun/cool2fun.github.io/gh-pages/sitemap.xml\")"
     ]
   }
 }
