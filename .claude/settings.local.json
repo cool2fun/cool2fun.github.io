@@ -38,7 +38,10 @@
       "Bash(curl -s \"https://api.github.com/repos/cool2fun/cool2fun.github.io/actions/runs?per_page=3\")",
       "Bash(curl -s \"https://api.github.com/repos/cool2fun/cool2fun.github.io/actions/workflows/deploy.yml/runs?per_page=5\")",
       "Bash(curl -s \"https://api.github.com/repos/cool2fun/cool2fun.github.io/actions/runs/24736253352/jobs\")",
-      "Bash(curl -s \"https://api.github.com/repos/cool2fun/cool2fun.github.io/actions/runs/24736253352/logs\")"
+      "Bash(curl -s \"https://api.github.com/repos/cool2fun/cool2fun.github.io/actions/runs/24736253352/logs\")",
+      "Bash(git pull *)",
+      "Bash(git stash *)",
+      "Bash(node -e ' *)"
     ]
   }
 }
