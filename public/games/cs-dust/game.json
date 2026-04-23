@@ -1,8 +1,0 @@
-{
-  "slug": "cs-dust",
-  "name": "CS Dust",
-  "product": "CSDust",
-  "src": "index.html",
-  "description": "Unity WebGL shooter hosted on Cool2Fun",
-  "adsScript": "ads.js"
-}
