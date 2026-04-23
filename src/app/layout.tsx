@@ -10,14 +10,37 @@ export const metadata: Metadata = {
     template: '%s | Cool2Fun',
   },
   description: 'Hundreds of free unblocked games. Play action, racing, puzzle, adventure games instantly in your browser. No downloads needed!',
+  keywords: ['unblocked games', 'free games', 'online games', 'HTML5 games', 'action games', 'racing games', 'puzzle games'],
   openGraph: {
-    title: 'Cool2Fun - Free Math Games',
+    title: 'Cool2Fun - Free Unblocked Games',
     description: 'Hundreds of free unblocked games. Play instantly - no downloads!',
     type: 'website',
+    siteName: 'Cool2Fun',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  alternates: {
+    canonical: 'https://cool2fun.github.io/',
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const websiteJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Cool2Fun',
+    url: 'https://cool2fun.github.io/',
+    description: 'Free unblocked games playable in any browser.',
+    inLanguage: 'en',
+    isAccessibleForFree: true,
+  };
+
   return (
     <html lang="en">
       <head>
@@ -30,6 +53,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Script id="ga-config" strategy="afterInteractive">
           {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-EKC7L9377Q');`}
         </Script>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
       </head>
       <body>
         <Header />
