@@ -9,6 +9,8 @@ interface AdFrameProps {
 const frameConfig: Record<string, { src: string; width: string; height: string }> = {
   autu: { src: '/autu.html', width: '970px', height: '250px' },
   '970-90': { src: '/970-90.html', width: '728px', height: '90px' },
+  'ads-g-3-6': { src: '/ads-g-3-6.html', width: '300px', height: '250px' },
+  'ads-970-9': { src: '/ads-970-9.html', width: '970px', height: '90px' },
 };
 
 export default function AdFrame({ slot, width, height }: AdFrameProps) {
