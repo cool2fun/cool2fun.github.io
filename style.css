@@ -1,13 +1,13 @@
 :root {
-  --color-bg: #f4f5f7;
+  --color-bg: #eef1f8;
   --color-surface: #ffffff;
   --color-sidebar: #ffffff;
-  --color-border: #e6e8ec;
-  --color-text: #202533;
-  --color-muted: #737884;
-  --color-accent: #0ea5a4;
-  --color-accent-soft: #e6fffb;
-  --color-accent-hover: #0c8a89;
+  --color-border: #e2e6f0;
+  --color-text: #1e2233;
+  --color-muted: #6b7180;
+  --color-accent: #6d5efc;
+  --color-accent-soft: #eeebff;
+  --color-accent-hover: #5a4be0;
 
   --radius: 14px;
   --radius-sm: 9px;
@@ -36,6 +36,10 @@ body {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   color: var(--color-text);
   background: var(--color-bg);
+  background-image:
+    radial-gradient(1200px 600px at 100% -5%, rgba(109, 94, 252, 0.10), transparent 55%),
+    radial-gradient(900px 500px at -10% 0%, rgba(14, 165, 164, 0.08), transparent 50%);
+  background-attachment: fixed;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
@@ -114,6 +118,10 @@ img { max-width: 100%; display: block; }
   font-size: var(--text-h1);
   margin: 0 0 var(--space-1);
   letter-spacing: -0.02em;
+  background: linear-gradient(90deg, #6d5efc, #0ea5a4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .content-head p { color: var(--color-muted); margin: 0; }
@@ -148,7 +156,7 @@ img { max-width: 100%; display: block; }
 .game-thumb {
   position: relative;
   aspect-ratio: 4 / 3;
-  background: linear-gradient(135deg, #e6fffb, #ccfbf1);
+  background: linear-gradient(135deg, #eeebff, #d8f3f0);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -250,7 +258,7 @@ img { max-width: 100%; display: block; }
   box-shadow: var(--shadow-hover);
   aspect-ratio: 16 / 10;
   /* Keep the play area compact and centered rather than full-width. */
-  max-width: 640px;
+  max-width: 800px;
   margin: 0 auto var(--space-3);
 }
 
