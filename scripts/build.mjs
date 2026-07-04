@@ -125,6 +125,7 @@ function gamePage(g, related) {
   }
   </script>
 
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6556788076088846" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>

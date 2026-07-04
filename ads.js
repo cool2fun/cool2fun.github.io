@@ -18,11 +18,12 @@
 
   // ---- CONFIG ----
   var CLIENT = "ca-pub-6556788076088846";
+  // Each unit is a FIXED-SIZE AdSense display unit: slot id + [width, height].
   var SLOTS = {
-    sidebar: "3928608236",     // 300x600 rail unit
-    leaderboard: "7979200749", // 970x250 banner under the game
-    overlay: "9406916186",     // 300x250 pre-roll overlay unit
-    banner90: "5424355442",    // 970x90 (spare)
+    sidebar: { slot: "3928608236", w: 300, h: 600 },     // 300x600 rail
+    leaderboard: { slot: "7979200749", w: 970, h: 250 }, // 970x250 under game
+    overlay: { slot: "9406916186", w: 300, h: 250 },     // 300x250 pre-roll
+    banner90: { slot: "5424355442", w: 970, h: 90 },     // 970x90 (spare)
   };
   // ----------------
 
@@ -30,42 +31,33 @@
     return CLIENT.indexOf("ca-pub-") === 0;
   }
 
-  function loadLoaderOnce() {
-    if (document.querySelector('script[data-adsbygoogle-loader]')) return;
-    var s = document.createElement("script");
-    s.async = true;
-    s.src =
-      "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" +
-      encodeURIComponent(CLIENT);
-    s.crossOrigin = "anonymous";
-    s.setAttribute("data-adsbygoogle-loader", "1");
-    document.head.appendChild(s);
-  }
-
   function fillUnit(container) {
     var key = container.getAttribute("data-ad");
-    var slot = SLOTS[key];
-    if (!slot) return;
+    var cfg = SLOTS[key];
+    if (!cfg || !cfg.slot) return;
 
     // Remove the visual placeholder text/content.
     container.innerHTML = "";
     container.classList.add("ad-live");
 
+    // Fixed-size display unit (matches the AdSense unit dimensions).
     var ins = document.createElement("ins");
     ins.className = "adsbygoogle";
-    ins.style.display = "block";
+    ins.style.display = "inline-block";
+    ins.style.width = cfg.w + "px";
+    ins.style.height = cfg.h + "px";
     ins.setAttribute("data-ad-client", CLIENT);
-    ins.setAttribute("data-ad-slot", slot);
-    ins.setAttribute("data-ad-format", "auto");
-    ins.setAttribute("data-full-width-responsive", "true");
+    ins.setAttribute("data-ad-slot", cfg.slot);
     container.appendChild(ins);
 
-    (window.adsbygoogle = window.adsbygoogle || []).push({});
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (e) {}
   }
 
   function fillAll(scope) {
     if (!isConfigured()) return;
-    loadLoaderOnce();
+    // The adsbygoogle.js loader is included in each page's <head>.
     var root = scope || document;
     var units = root.querySelectorAll("[data-ad]");
     for (var i = 0; i < units.length; i++) {
