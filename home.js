@@ -7,13 +7,25 @@
 
   var PAGE_SIZE = 40;
   var ICONS = {
-    Cooking: "🍔", Strategy: "♟️", Action: "⚔️", Platform: "🏃",
-    Puzzle: "🧩", Adventure: "🗺️", Arcade: "🕹️",
+    Action: "⚔️", Racing: "🏎️", Puzzle: "🧩", Sports: "⚽", Strategy: "♟️",
+    Platform: "🏃", Adventure: "🗺️", Cooking: "🍔", Idle: "⏳", Arcade: "🕹️",
   };
+
+  // Well-known titles surfaced in the "Popular" row (matched by slug).
+  var POPULAR_SLUGS = [
+    "among-us", "vex-6", "vex-5", "vex-4", "happy-wheels", "tank-trouble",
+    "raze-3", "kingdom-rush", "plants-vs-zombies", "learn-to-fly-3",
+    "papa-s-freezeria", "duck-life-4", "run-3", "bloons-tower-defense-4",
+    "earn-to-die", "fireboy-and-watergirl", "2048-multiplayer", "cookie-clicker-2",
+    "crossy-road", "doodle-jump", "8-ball-pool", "basketball-stars",
+    "tomb-of-the-mask", "drift-boss", "moto-x3m", "slope",
+  ];
 
   var grid = document.getElementById("game-grid");
   var heading = document.getElementById("grid-heading");
   var moreWrap = document.getElementById("load-more-wrap");
+  var popularSection = document.getElementById("popular-section");
+  var popularGrid = document.getElementById("popular-grid");
   if (!grid) return;
 
   var all = [];
@@ -67,6 +79,33 @@
     }
   }
 
+  function renderPopular() {
+    if (!popularSection || !popularGrid) return;
+    var cat = getCategory();
+    // Popular row only shows on the unfiltered home view.
+    if (cat) {
+      popularSection.hidden = true;
+      return;
+    }
+    var bySlug = {};
+    for (var i = 0; i < all.length; i++) bySlug[all[i].slug] = all[i];
+    var picks = [];
+    for (var j = 0; j < POPULAR_SLUGS.length && picks.length < 12; j++) {
+      var g = bySlug[POPULAR_SLUGS[j]];
+      if (g) picks.push(g);
+    }
+    // Top up with games that have real thumbnails if the list is short.
+    for (var k = 0; k < all.length && picks.length < 12; k++) {
+      if (all[k].thumb && picks.indexOf(all[k]) === -1) picks.push(all[k]);
+    }
+    if (picks.length === 0) {
+      popularSection.hidden = true;
+      return;
+    }
+    popularSection.hidden = false;
+    popularGrid.innerHTML = picks.map(cardHTML).join("");
+  }
+
   function applyFilter() {
     var cat = getCategory();
     filtered = cat ? all.filter(function (g) { return g.category === cat; }) : all;
@@ -98,6 +137,7 @@
     .then(function (data) {
       all = data;
       markActiveCategory();
+      renderPopular();
       applyFilter();
     })
     .catch(function () {

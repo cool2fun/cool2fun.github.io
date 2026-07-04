@@ -1,14 +1,18 @@
 // Shared game data helpers: slug, title, category, normalization.
 // Used by the build script; category rules are keyword-based (data has no genre).
 
+// Order matters: the first matching rule wins, so put more specific
+// categories before broader ones (e.g. Cooking before Sports).
 const CATEGORY_RULES = [
-  { category: "Cooking", keywords: ["Papa", "Papas", "Sushiria", "Bakeria", "Cheeseria", "Donuteria", "Wingeria", "Freezeria", "Pastaria", "Pancakeria", "Taco-Mia", "Burgeria", "Pizzeria", "Cupcakeria", "Hot-Doggeria", "Cluckeria", "Scooperia"] },
-  { category: "Strategy", keywords: ["Bloons", "Kingdom-Rush", "Gemcraft", "Cursed-Treasure", "Tower-Defense", "Age-Of-War", "Plants-Vs-Zombies", "Pandemic", "Stick-War", "Mighty-Knight", "Doodle-God", "Steambirds", "Caravaneer"] },
-  { category: "Action", keywords: ["Sift-Heads", "Madness", "Raze", "Strike-Force", "Boxhead", "Hobo", "Electric-Man", "Achilles", "Sonny", "Alien-Hominid", "Epic-Battle-Fantasy", "Bleach-Vs-Naruto", "Super-Smash-Flash", "Sonic-Smash", "Road-Of-The-Dead", "Zombocalypse", "The-Last-Stand", "Tank-Trouble", "Mutilate", "Whack", "Defend-Your-Nuts", "Interactive-Buddy", "The-Binding-Of-Isaac", "Armed-With-Wings"] },
-  { category: "Platform", keywords: ["Wheely", "Vex", "Red-Ball", "Fireboy", "Fancy-Pants", "Super-Mario", "Portal", "Kawairun", "Awesome-Run", "Santa-Run", "Freddy-Nightmare-Run", "Toss-The-Turtle", "Raft-Wars", "Jump", "Jumpers", "Tube-Jumpers"] },
-  { category: "Puzzle", keywords: ["Riddle-School", "Cube-Escape", "Trollface", "Bloxorz", "Sugar-Sugar", "Impossible-Quiz", "Double-Wires", "Abandoned", "Word", "Tiny-Islands", "WIZ", "Zumba-Mania"] },
-  { category: "Sports", keywords: ["Tennis", "Soccer", "Football", "Basketball", "Golf", "Bowling", "Pool", "Fishing", "Wrestle", "Boxing", "Baseball", "Volleyball", "Yahoo-Tennis"] },
-  { category: "Adventure", keywords: ["Duck-Life", "Learn-To-Fly", "Earn-To-Die", "Dino-Run", "Qwop", "Bob-The-Robber", "Escaping-The-Prison", "Fleeing-The-Complex", "Infiltrating-The-Airship", "Swords-And-Sandals", "Minecraft", "Abobo", "60-Second", "60-Seconds"] },
+  { category: "Cooking", keywords: ["Papa", "Papas", "Sushiria", "Bakeria", "Cheeseria", "Donuteria", "Wingeria", "Freezeria", "Pastaria", "Pancakeria", "Taco-Mia", "Burgeria", "Pizzeria", "Cupcakeria", "Hot-Doggeria", "Cluckeria", "Scooperia", "Cooking", "Sushi", "Burger", "Pizza", "Cake", "Cook", "Chef", "Kitchen", "Bakery", "Cafe", "Restaurant", "Ice-Cream", "Candy", "Donut"] },
+  { category: "Racing", keywords: ["Racing", "Race", "Racer", "Drift", "Traffic", "Vehicles", "Vehicle", "Car", "Cars", "Bike", "Moto", "Motorcycle", "Truck", "Wheelie", "Highway", "Speed", "Turbo", "Nitro", "Rally", "Formula", "Kart", "Driving", "Driver", "Parking", "Rush-Hour"] },
+  { category: "Idle", keywords: ["Idle", "Clicker", "Tycoon", "Simulator", "Merge", "Incremental", "Paperclips", "Cookie-Clicker", "Capitalist", "Miner", "Factory", "Empire", "Manager"] },
+  { category: "Strategy", keywords: ["Bloons", "Kingdom-Rush", "Gemcraft", "Cursed-Treasure", "Tower-Defense", "Tower-Defenders", "Toy-Defense", "Age-Of-War", "Plants-Vs-Zombies", "Pandemic", "Stick-War", "Mighty-Knight", "Doodle-God", "Steambirds", "Caravaneer", "Defense", "Defenders", "Defend", "Chess", "Checkers", "Battle", "War", "Tactics", "Strategy", "Kings-League", "Takeover"] },
+  { category: "Sports", keywords: ["Tennis", "Soccer", "Football", "Basketball", "Basket", "Golf", "Bowling", "Bowl", "Pool", "Fishing", "Wrestle", "Boxing", "Baseball", "Volleyball", "Volley", "Pickleball", "Skater", "Skate", "Sumo", "Hockey", "Cricket", "Dunk", "Pro-Skater", "Super-Bowl", "Goal"] },
+  { category: "Action", keywords: ["Sift-Heads", "Madness", "Raze", "Strike-Force", "Boxhead", "Hobo", "Electric-Man", "Achilles", "Sonny", "Alien-Hominid", "Epic-Battle-Fantasy", "Bleach-Vs-Naruto", "Super-Smash-Flash", "Sonic-Smash", "Road-Of-The-Dead", "Zombocalypse", "The-Last-Stand", "Tank-Trouble", "Tank", "Tanks", "Mutilate", "Whack", "Defend-Your-Nuts", "Interactive-Buddy", "The-Binding-Of-Isaac", "Armed-With-Wings", "Stickman", "Stick-Duel", "Shooter", "Shoot", "Gun", "Gunfire", "Sniper", "Zombie", "Zombies", "Ninja", "Ninjas", "SWAT", "Fight", "Fighter", "Duel", "Sword", "Knight", "Combat", "Warrior", "Survev", "Massacre", "Space-Wars"] },
+  { category: "Platform", keywords: ["Wheely", "Vex", "Red-Ball", "Fireboy", "Fancy-Pants", "Super-Mario", "Mario", "Sonic", "Portal", "Kawairun", "Awesome-Run", "Santa-Run", "Freddy-Nightmare-Run", "Toss-The-Turtle", "Raft-Wars", "Jump", "Jumper", "Jumpers", "Tube-Jumpers", "Parkour", "Run", "Runner", "Climb", "Spelunky", "Big-Tower-Tiny-Square", "Boy", "World"] },
+  { category: "Puzzle", keywords: ["Riddle-School", "Cube-Escape", "Trollface", "Bloxorz", "Sugar-Sugar", "Impossible-Quiz", "Impossible-Game", "Double-Wires", "Abandoned", "Word", "Words", "Tiny-Islands", "WIZ", "Zumba-Mania", "Puzzle", "Sudoku", "Mahjong", "Solitaire", "Tetris", "2048", "Unblock", "Uno", "Sort", "Match", "Escape", "Blocks", "Block", "Suika", "Watermelon", "Crossword", "Quiz", "Mind", "Brain", "Logic"] },
+  { category: "Adventure", keywords: ["Duck-Life", "Learn-To-Fly", "Earn-To-Die", "Dino-Run", "Qwop", "Bob-The-Robber", "Escaping-The-Prison", "Fleeing-The-Complex", "Infiltrating-The-Airship", "Swords-And-Sandals", "Minecraft", "Abobo", "60-Second", "60-Seconds", "Adventure", "Quest", "Zelda", "Journey", "Explore", "Story", "Legend", "Rpg", "Dungeon", "Isle", "Island"] },
 ];
 
 const DEFAULT_CATEGORY = "Arcade";
@@ -84,15 +88,17 @@ export function parseCsv(text) {
   return out;
 }
 
-export const CATEGORIES = ["Cooking", "Strategy", "Action", "Platform", "Puzzle", "Adventure", "Sports", "Arcade"];
+export const CATEGORIES = ["Action", "Racing", "Puzzle", "Sports", "Strategy", "Platform", "Adventure", "Cooking", "Idle", "Arcade"];
 
 export const CATEGORY_ICONS = {
-  Cooking: "🍔",
-  Strategy: "♟️",
   Action: "⚔️",
-  Platform: "🏃",
+  Racing: "🏎️",
   Puzzle: "🧩",
-  Adventure: "🗺️",
   Sports: "⚽",
+  Strategy: "♟️",
+  Platform: "🏃",
+  Adventure: "🗺️",
+  Cooking: "🍔",
+  Idle: "⏳",
   Arcade: "🕹️",
 };

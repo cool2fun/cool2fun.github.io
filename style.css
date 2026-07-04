@@ -172,6 +172,21 @@ img { max-width: 100%; display: block; }
 .game-body .tag { color: var(--color-muted); font-size: 0.8rem; }
 
 /* Footer */
+/* SEO intro block above the footer */
+.seo-intro {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-muted);
+  font-size: 0.92rem;
+  line-height: 1.65;
+  max-width: 900px;
+}
+.seo-intro h2 { font-size: var(--text-h2); color: var(--color-text); margin: 0 0 var(--space-2); }
+.seo-intro p { margin: 0 0 var(--space-2); }
+.seo-intro a { color: var(--color-accent); }
+.seo-intro a:hover { color: var(--color-accent-hover); }
+
 .content-footer,
 .site-footer {
   border-top: 1px solid var(--color-border);
@@ -234,7 +249,9 @@ img { max-width: 100%; display: block; }
   overflow: hidden;
   box-shadow: var(--shadow-hover);
   aspect-ratio: 16 / 10;
-  margin: 0 0 var(--space-3);
+  /* Keep the play area compact and centered rather than full-width. */
+  max-width: 640px;
+  margin: 0 auto var(--space-3);
 }
 
 .play-frame iframe, .play-frame canvas, .play-frame ruffle-player, .play-frame > embed {
@@ -256,18 +273,21 @@ img { max-width: 100%; display: block; }
 }
 
 .overlay-ad {
-  width: 300px;
   max-width: 100%;
-  height: 250px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: repeating-linear-gradient(45deg, #12151f, #12151f 12px, #171b28 12px, #171b28 24px);
-  border: 1px dashed rgba(255, 255, 255, 0.18);
-  border-radius: var(--radius-sm);
   color: rgba(255, 255, 255, 0.55);
   font-size: 0.85rem;
   font-weight: 600;
+}
+
+.overlay-ad:not(.ad-live) {
+  width: 300px;
+  height: 250px;
+  background: repeating-linear-gradient(45deg, #12151f, #12151f 12px, #171b28 12px, #171b28 24px);
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-sm);
 }
 
 .overlay-play {
@@ -338,48 +358,57 @@ img { max-width: 100%; display: block; }
   gap: var(--space-3);
 }
 
-.ad-slot {
-  width: 300px;
-  height: 600px;
-  max-width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: repeating-linear-gradient(
-    45deg,
-    var(--color-surface),
-    var(--color-surface) 12px,
-    var(--color-bg) 12px,
-    var(--color-bg) 24px
-  );
-  border: 1px dashed var(--color-border);
-  border-radius: var(--radius);
-  color: var(--color-muted);
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-/* Horizontal ad banner under the game (AdSense auto 970x250 / 728x90) */
+/* Ad containers: the placeholder look is ONLY for the dev/empty state.
+   Once AdSense fills a unit, .ad-live strips all box styling so the
+   container shrink-wraps the <ins> and never overflows its column. */
+.ad-slot,
 .ad-banner {
-  width: 100%;
-  min-height: 90px;
-  margin-top: var(--space-3);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: repeating-linear-gradient(
-    45deg,
-    var(--color-surface),
-    var(--color-surface) 12px,
-    var(--color-bg) 12px,
-    var(--color-bg) 24px
-  );
-  border: 1px dashed var(--color-border);
-  border-radius: var(--radius);
+  max-width: 100%;
   color: var(--color-muted);
   font-size: 0.9rem;
   font-weight: 600;
   overflow: hidden;
+}
+
+/* Placeholder (empty) sizing + dashed look. */
+.ad-slot:not(.ad-live) {
+  width: 300px;
+  height: 600px;
+  background: repeating-linear-gradient(45deg, var(--color-surface), var(--color-surface) 12px, var(--color-bg) 12px, var(--color-bg) 24px);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius);
+}
+
+.ad-banner:not(.ad-live) {
+  width: 100%;
+  min-height: 90px;
+  margin-top: var(--space-3);
+  background: repeating-linear-gradient(45deg, var(--color-surface), var(--color-surface) 12px, var(--color-bg) 12px, var(--color-bg) 24px);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius);
+}
+
+/* Live (filled) state: no border/background, wrap tightly around the ad. */
+.ad-slot.ad-live,
+.ad-banner.ad-live {
+  display: block;
+  width: auto;
+  height: auto;
+  min-height: 0;
+  border: 0;
+  background: none;
+  margin: 0 auto;
+}
+.ad-banner.ad-live { margin-top: var(--space-3); }
+
+/* The AdSense <ins> should never exceed its column width. */
+.ad-slot .adsbygoogle,
+.ad-banner .adsbygoogle,
+.overlay-ad .adsbygoogle {
+  max-width: 100%;
 }
 
 .rail-games > h2 { font-size: 1.05rem; margin: 0 0 var(--space-2); }

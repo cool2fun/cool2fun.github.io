@@ -7,7 +7,7 @@ import { readFile, writeFile, mkdir, readdir, unlink } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { existsSync } from "node:fs";
-import { normalize, CATEGORY_ICONS, parseCsv } from "./games.mjs";
+import { normalize, CATEGORY_ICONS, CATEGORIES, parseCsv } from "./games.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -31,18 +31,10 @@ function sidebar() {
         <p class="cat-label">Explore</p>
         <div class="cat-nav">
           <a href="/">🏠 Home</a>
-          <a href="/#new">✨ New</a>
-          <a href="/#popular">🔥 Popular</a>
         </div>
         <p class="cat-label">Categories</p>
         <div class="cat-nav">
-          <a href="/?cat=Action">⚔️ Action</a>
-          <a href="/?cat=Puzzle">🧩 Puzzle</a>
-          <a href="/?cat=Strategy">♟️ Strategy</a>
-          <a href="/?cat=Platform">🏃 Platform</a>
-          <a href="/?cat=Adventure">🗺️ Adventure</a>
-          <a href="/?cat=Cooking">🍔 Cooking</a>
-          <a href="/?cat=Arcade">🕹️ Arcade</a>
+${CATEGORIES.map((c) => `          <a href="/?cat=${c}">${CATEGORY_ICONS[c]} ${c}</a>`).join("\n")}
         </div>
       </nav>
     </aside>`;
