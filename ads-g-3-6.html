@@ -6,26 +6,58 @@
   <title>Online Car Games — Free Racing & Driving Games | Cool2Fun</title>
   <meta name="description" content="Play free online car games at Cool2Fun: racing, driving and parking games you can play instantly in your browser.">
   <style>
-    body { margin: 0; font-family: system-ui, sans-serif; }
-    .seo-text { max-width: 300px; margin: 12px auto 0; font-size: 13px; line-height: 1.5; color: #444; }
-    .seo-text h1 { font-size: 15px; margin: 0 0 6px; }
+    body { 
+      margin: 0; 
+      font-family: system-ui, sans-serif; 
+    }
+    .seo-text { 
+      max-width: 300px; 
+      margin: 12px auto 0; 
+      font-size: 13px; 
+      line-height: 1.5; 
+      color: #444; 
+    }
+    .seo-text h1 { 
+      font-size: 15px; 
+      margin: 0 0 6px; 
+    }
+
+    /* Khung bao ngoài để căn giữa quảng cáo ra giữa màn hình */
+    .ad-wrapper {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin: 20px 0; /* Khoảng cách trên dưới (có thể điều chỉnh) */
+    }
+
+    /* Vùng chứa quảng cáo: Căn giữa chính tấm ảnh/iframe quảng cáo bên trong */
+    #div-gpt-ad-1783154380729-0 {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   </style>
   <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
   <script>
-  window.googletag = window.googletag || {cmd: []};
-  googletag.cmd.push(function() {
-    googletag.defineSlot('/23136362493/300x600', [[160, 600], [300, 600]], 'div-gpt-ad-1783154380729-0').addService(googletag.pubads());
-    googletag.pubads().enableSingleRequest();
-    googletag.enableServices();
+    window.googletag = window.googletag || {cmd: []};
+    googletag.cmd.push(function() {
+      googletag.defineSlot('/23136362493/300x600', [[160, 600], [300, 600]], 'div-gpt-ad-1783154380729-0').addService(googletag.pubads());
+      googletag.pubads().enableSingleRequest();
+      googletag.enableServices();
     });
-</script>
+  </script>
 </head>
 <body>
-  <!-- /23136362493/300x600 -->
-<div id='div-gpt-ad-1783154380729-0' style='min-width: 160px; min-height: 600px; margin: 0 auto; display: block;'>
-  <script>
-    googletag.cmd.push(function() { googletag.display('div-gpt-ad-1783154380729-0'); });
-  </script>
-</div>
+
+  <!-- Khung bao ngoài dùng để căn giữa toàn bộ vùng quảng cáo -->
+  <div class="ad-wrapper">
+    <!-- /23136362493/300x600 -->
+    <div id='div-gpt-ad-1783154380729-0' style='min-width: 160px; min-height: 600px; display: flex;'>
+      <script>
+        googletag.cmd.push(function() { googletag.display('div-gpt-ad-1783154380729-0'); });
+      </script>
+    </div>
+  </div>
+
 </body>
 </html>
