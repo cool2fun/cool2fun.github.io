@@ -3,36 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Online Car Games — Free Racing & Driving Games | Cool2Fun</title>
-  <meta name="description" content="Play free online car games at Cool2Fun: racing, driving and parking games you can play instantly in your browser.">
+  <title>Online Car Games — Free Racing & Driving Games</title>
   <style>
-    body { 
-      margin: 0; 
-      font-family: system-ui, sans-serif; 
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      overflow: hidden;
     }
-    .seo-text { 
-      max-width: 970px; 
-      margin: 10px auto 0; 
-      padding: 0 12px; 
-      font-size: 13px; 
-      line-height: 1.5; 
-      color: #444; 
-      text-align: center; 
-    }
-    .seo-text h1 { 
-      font-size: 15px; 
-      margin: 0 0 4px; 
-    }
-
-    /* Khung bao ngoài để đảm bảo vùng quảng cáo luôn nằm giữa màn hình */
     .ad-wrapper {
       display: flex;
       justify-content: center;
+      align-items: center;
       width: 100%;
-      margin: 15px 0; /* Khoảng cách trên dưới của quảng cáo */
+      min-height: 50px;
     }
-
-    /* Vùng chứa quảng cáo: Căn giữa chính tấm ảnh/iframe quảng cáo bên trong */
     #div-gpt-ad-1783154460421-0 {
       display: flex;
       justify-content: center;
@@ -41,20 +26,51 @@
   </style>
   <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
   <script>
+    // Lấy và kiểm tra tính hợp lệ của topUrl
+    const urlParams = new URLSearchParams(window.location.search);
+    let topUrl = urlParams.get('topUrl');
+    
+    if (topUrl) {
+      try {
+        // Validation tránh truyền URL rác làm lỗi bid request
+        topUrl = new URL(topUrl).href;
+      } catch(e) {
+        topUrl = null;
+      }
+    }
+
     window.googletag = window.googletag || {cmd: []};
     googletag.cmd.push(function() {
-      googletag.defineSlot('/23136362493/970x90', [[750, 100], [970, 90], [728, 90]], 'div-gpt-ad-1783154460421-0').addService(googletag.pubads());
+      // 1. Phân bổ Size chuẩn để mobile không gọi size 970x90 gây no-fill
+      var mapping = googletag.sizeMapping()
+        .addSize([992, 0], [[970, 90], [750, 100], [728, 90]]) // Desktop màn to
+        .addSize([768, 0], [[728, 90], [468, 60]])             // Tablet
+        .addSize([0, 0], [[320, 50], [300, 50]])               // Mobile
+        .build();
+
+      googletag.defineSlot('/23136362493/970x90', 
+        [[970, 90], [750, 100], [728, 90], [468, 60], [320, 50], [300, 50]], 
+        'div-gpt-ad-1783154460421-0')
+        .defineSizeMapping(mapping)
+        .addService(googletag.pubads());
+
+      // 2. Định danh trang gốc để đẩy giá thầu CPC/CPM cao hơn
+      if (topUrl) {
+        googletag.pubads().set("page_url", topUrl);
+      }
+
       googletag.pubads().enableSingleRequest();
+      // Thu gọn div khi no-fill để không bị chừa khoảng trắng vô lý
+      googletag.pubads().collapseEmptyDivs(true);
       googletag.enableServices();
     });
   </script>
 </head>
 <body>
 
-  <!-- Khung bao ngoài dùng để căn giữa toàn bộ vùng quảng cáo -->
   <div class="ad-wrapper">
     <!-- /23136362493/970x90 -->
-    <div id='div-gpt-ad-1783154460421-0' style='min-width: 728px; min-height: 90px; display: flex;'>
+    <div id='div-gpt-ad-1783154460421-0'>
       <script>
         googletag.cmd.push(function() { googletag.display('div-gpt-ad-1783154460421-0'); });
       </script>
