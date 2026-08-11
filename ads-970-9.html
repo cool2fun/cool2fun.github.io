@@ -3,79 +3,56 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Online Car Games — Free Racing & Driving Games</title>
+  <title>Free Play Online Games - Cool2fun.github.io</title>
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: transparent;
-      overflow: hidden;
-    }
-    .ad-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      min-height: 50px;
-    }
-    #div-gpt-ad-1783154460421-0 {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+    html, body { margin: 0; padding: 0; background: transparent; overflow: hidden; }
+    .ad-wrapper { display: flex; justify-content: center; align-items: center; width: 100%; min-height: 90px; }
+    #div-gpt-ad-1783154460421-0 { display: flex; justify-content: center; align-items: center; }
   </style>
   <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
   <script>
-    // Lấy và kiểm tra tính hợp lệ của topUrl
-    const urlParams = new URLSearchParams(window.location.search);
-    let topUrl = urlParams.get('topUrl');
-    
-    if (topUrl) {
+    window.googletag = window.googletag || { cmd: [] };
+    (function () {
+      var topUrl = null;
       try {
-        // Validation tránh truyền URL rác làm lỗi bid request
-        topUrl = new URL(topUrl).href;
-      } catch(e) {
-        topUrl = null;
-      }
-    }
+        var raw = new URLSearchParams(window.location.search).get('topUrl');
+        if (raw) { topUrl = new URL(raw).href; }
+      } catch (e) { topUrl = null; }
 
-    window.googletag = window.googletag || {cmd: []};
-    googletag.cmd.push(function() {
-      // 1. Phân bổ Size chuẩn để mobile không gọi size 970x90 gây no-fill
-      var mapping = googletag.sizeMapping()
-        .addSize([992, 0], [[970, 90], [750, 100], [728, 90]]) // Desktop màn to
-        .addSize([768, 0], [[728, 90], [468, 60]])             // Tablet
-        .addSize([0, 0], [[320, 50], [300, 50]])               // Mobile
-        .build();
+      googletag.cmd.push(function () {
+        var DIV = 'div-gpt-ad-1783154460421-0';
+        var pubads = googletag.pubads();
 
-      googletag.defineSlot('/23136362493/970x90', 
-        [[970, 90], [750, 100], [728, 90], [468, 60], [320, 50], [300, 50]], 
-        'div-gpt-ad-1783154460421-0')
-        .defineSizeMapping(mapping)
-        .addService(googletag.pubads());
+        var mapping = googletag.sizeMapping()
+          .addSize([992, 0], [[970, 90], [750, 100], [728, 90]])
+          .addSize([768, 0], [[728, 90], [468, 60]])
+          .addSize([0, 0], [[320, 50], [300, 50]])
+          .build();
 
-      // 2. Định danh trang gốc để đẩy giá thầu CPC/CPM cao hơn
-      if (topUrl) {
-        googletag.pubads().set("page_url", topUrl);
-      }
+        googletag.defineSlot('/23136362493/970x90',
+          [[970, 90], [750, 100], [728, 90], [468, 60], [320, 50], [300, 50]], DIV)
+          .defineSizeMapping(mapping)
+          .setForceSafeFrame(true)
+          .addService(pubads);
 
-      googletag.pubads().enableSingleRequest();
-      // Thu gọn div khi no-fill để không bị chừa khoảng trắng vô lý
-      googletag.pubads().collapseEmptyDivs(true);
-      googletag.enableServices();
-    });
+        if (topUrl) {
+          pubads.set('page_url', topUrl);
+          try { pubads.setTargeting('ref_host', new URL(topUrl).hostname); } catch (e) {}
+        }
+
+        pubads.setCentering(true);
+        pubads.enableSingleRequest();
+        pubads.enableLazyLoad({ fetchMarginPercent: 200, renderMarginPercent: 100, mobileScaling: 2.0 });
+        pubads.collapseEmptyDivs(false);
+        googletag.enableServices();
+        googletag.display(DIV);
+      });
+    })();
   </script>
 </head>
 <body>
-
   <div class="ad-wrapper">
-    <!-- /23136362493/970x90 -->
-    <div id='div-gpt-ad-1783154460421-0'>
-      <script>
-        googletag.cmd.push(function() { googletag.display('div-gpt-ad-1783154460421-0'); });
-      </script>
-    </div>
+    <div id="div-gpt-ad-1783154460421-0"></div>
   </div>
-
 </body>
 </html>
