@@ -1,7 +1,13 @@
 (function () {
   var UNITS = {
-    leaderboard: { src: '/ads/970x90.html',  w: 970, h: 90  },
-    sidebar:     { src: '/ads/300x600.html', w: 300, h: 600 }
+    leaderboard: {
+      src: 'https://script.google.com/macros/s/AKfycby0NyvZW0TAogOkUh-P5Knwe2PrFhplDyYtRkr7-dM3OxAuqOoHVd44EbhNasboVQy79w/exec',
+      w: 970, h: 90
+    },
+    sidebar: {
+      src: 'https://script.google.com/macros/s/AKfycbyPT-YXxEPg_av-B0yJlvR9BSGVsmcaQdFGJl0fDpb6RbuHk6YaepHswQzkl1iNZTAC1Q/exec',
+      w: 300, h: 600
+    }
   };
 
   function injectAd(el, key) {
