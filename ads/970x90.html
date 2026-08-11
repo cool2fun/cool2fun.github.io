@@ -12,9 +12,10 @@
     window.googletag = window.googletag || { cmd: [] };
     (function () {
       var topUrl = null;
+      var topHost = null;
       try {
         var raw = new URLSearchParams(window.location.search).get('topUrl');
-        if (raw) topUrl = new URL(raw).href;
+        if (raw) { topUrl = new URL(raw).href; topHost = new URL(raw).hostname; }
       } catch (e) {}
 
       googletag.cmd.push(function () {
@@ -33,13 +34,20 @@
           .setForceSafeFrame(true)
           .addService(pubads);
 
-        if (topUrl) {
-          pubads.set('page_url', topUrl);
-          try { pubads.setTargeting('ref_host', new URL(topUrl).hostname); } catch (e) {}
-        }
+        if (topUrl)  pubads.set('page_url', topUrl);
+        if (topHost) pubads.setTargeting('ref_host', topHost);
+
+        pubads.setTargeting('kw', [
+          'car games', 'racing games', 'driving games', 'online games',
+          'free games', 'browser games', 'car simulator', 'racing simulator',
+          'speed games', 'multiplayer racing'
+        ]);
+        pubads.setTargeting('cat', ['games', 'racing', 'driving']);
+        pubads.setTargeting('content', 'game');
 
         pubads.setCentering(true);
         pubads.enableSingleRequest();
+        pubads.enableLazyLoad({ fetchMarginPercent: 500, renderMarginPercent: 200, mobileScaling: 2.0 });
         pubads.collapseEmptyDivs(false);
         googletag.enableServices();
         googletag.display(DIV);
