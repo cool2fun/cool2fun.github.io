@@ -9,7 +9,8 @@
     <script>
       window.googletag = window.googletag || {cmd: []};
       googletag.cmd.push(function() {
-        googletag.defineSlot('/23136362493/970x250-ADS', [[970, 90], 'fluid'], 'div-gpt-ad-1787490221396-0')
+        // Giữ nguyên kích thước chuẩn [970, 90] để Google Ads nhận diện đúng
+        googletag.defineSlot('/23136362493/970x250-ADS', [970, 90], 'div-gpt-ad-1787490221396-0')
                  .addService(googletag.pubads());
         googletag.pubads().enableSingleRequest();
         googletag.enableServices();
@@ -19,28 +20,30 @@
         html, body {
             margin: 0;
             padding: 0;
-            width: 100%;
+            width: 100vw;
             height: 100vh;
-            overflow: hidden; /* Xóa hoàn toàn thanh cuộn */
+            overflow: hidden; /* Cắt sạch scrollbar */
             display: flex;
             justify-content: center;
             align-items: center;
             box-sizing: border-box;
         }
 
+        /* Khung chứa cố định kích thước chuẩn cho Google Ads đọc dữ liệu */
         .ad-container {
-            width: 100%;
-            max-width: 970px;
-            height: auto;
-            max-height: 90px;
+            width: 970px;
+            height: 90px;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        .ad-container iframe {
-            max-width: 100% !important;
-            height: auto !important;
+        /* Co dãn nguyên khối banner khi màn hình nhỏ hơn 970px mà không can thiệp iframe */
+        @media (max-width: 970px) {
+            .ad-container {
+                transform: scale(calc(100vw / 970));
+                transform-origin: center center;
+            }
         }
     </style>
 </head>
