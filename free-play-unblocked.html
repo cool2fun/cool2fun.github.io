@@ -9,10 +9,12 @@
     <script>
       window.googletag = window.googletag || {cmd: []};
       googletag.cmd.push(function() {
-        // Giữ nguyên kích thước chuẩn [970, 90] để Google Ads nhận diện đúng
+        // Sử dụng cú pháp mới chuẩn GPT để tránh cảnh báo Deprecated
+        googletag.setConfig({ singleRequest: true });
+
         googletag.defineSlot('/23136362493/970x250-ADS', [970, 90], 'div-gpt-ad-1787490221396-0')
                  .addService(googletag.pubads());
-        googletag.pubads().enableSingleRequest();
+
         googletag.enableServices();
       });
     </script>
@@ -22,14 +24,14 @@
             padding: 0;
             width: 100vw;
             height: 100vh;
-            overflow: hidden; /* Cắt sạch scrollbar */
+            overflow: hidden; /* Cắt sạch hoàn toàn thanh cuộn */
             display: flex;
             justify-content: center;
             align-items: center;
             box-sizing: border-box;
         }
 
-        /* Khung chứa cố định kích thước chuẩn cho Google Ads đọc dữ liệu */
+        /* Giữ cố định kích thước 970x90 cho Google Ads nhận diện */
         .ad-container {
             width: 970px;
             height: 90px;
@@ -38,7 +40,7 @@
             align-items: center;
         }
 
-        /* Co dãn nguyên khối banner khi màn hình nhỏ hơn 970px mà không can thiệp iframe */
+        /* Co dãn nguyên khối banner khi xem trên màn hình nhỏ hơn 970px */
         @media (max-width: 970px) {
             .ad-container {
                 transform: scale(calc(100vw / 970));
