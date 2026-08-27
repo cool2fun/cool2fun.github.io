@@ -3,36 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Online Car Games — Free Racing & Driving Games | Cool2Fun</title>
-  <meta name="description" content="Play free online car games at Cool2Fun: racing, driving and parking games you can play instantly in your browser.">
   <style>
-    body { margin: 0; font-family: system-ui, sans-serif; }
-    .seo-text { max-width: 300px; margin: 12px auto 0; font-size: 13px; line-height: 1.5; color: #444; }
-    .seo-text h1 { font-size: 15px; margin: 0 0 6px; }
+    html, body { margin: 0; padding: 0; background: transparent; overflow: hidden; }
+    #wrap { display: flex; justify-content: center; align-items: center; width: 100%; min-height: 250px; }
   </style>
   <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
   <script>
-  window.googletag = window.googletag || {cmd: []};
-  googletag.cmd.push(function() {
-    googletag.defineSlot('/23136362493/300x600', [[160, 600], [300, 600]], 'div-gpt-ad-1783154380729-0').addService(googletag.pubads());
-    googletag.pubads().enableSingleRequest();
-    googletag.enableServices();
-    });
-</script>
+    window.googletag = window.googletag || { cmd: [] };
+    (function () {
+      var topUrl = null;
+      var topHost = null;
+      try {
+        var raw = new URLSearchParams(window.location.search).get('topUrl');
+        if (raw) { topUrl = new URL(raw).href; topHost = new URL(raw).hostname; }
+      } catch (e) {}
+
+      googletag.cmd.push(function () {
+        var DIV = 'gpt-300x600';
+        var pubads = googletag.pubads();
+
+        var mapping = googletag.sizeMapping()
+          .addSize([768, 0], [[300, 600], [160, 600], [300, 250]])
+          .addSize([0, 0],   [[300, 250], [300, 50]])
+          .build();
+
+        googletag.defineSlot('/23136362493/300x600',
+          [[300, 600], [160, 600], [300, 250], [300, 50]], DIV)
+          .defineSizeMapping(mapping)
+          .setForceSafeFrame(true)
+          .addService(pubads);
+
+        if (topUrl)  pubads.set('page_url', topUrl);
+        if (topHost) pubads.setTargeting('ref_host', topHost);
+
+        pubads.setTargeting('kw', [
+          'car games', 'racing games', 'driving games', 'online games',
+          'free games', 'browser games', 'car simulator', 'racing simulator',
+          'speed games', 'multiplayer racing'
+        ]);
+        pubads.setTargeting('cat', ['games', 'racing', 'driving']);
+        pubads.setTargeting('content', 'game');
+
+        pubads.setCentering(true);
+        pubads.enableSingleRequest();
+        pubads.enableLazyLoad({ fetchMarginPercent: 500, renderMarginPercent: 200, mobileScaling: 2.0 });
+        pubads.collapseEmptyDivs(false);
+        googletag.enableServices();
+        googletag.display(DIV);
+      });
+    })();
+  </script>
 </head>
 <body>
-  <!-- /23136362493/300x600 -->
-<div id='div-gpt-ad-1783154380729-0' style='min-width: 160px; min-height: 600px;'>
-  <script>
-    googletag.cmd.push(function() { googletag.display('div-gpt-ad-1783154380729-0'); });
-  </script>
-</div>
-
-  <section class="seo-text">
-    <h1>Online Car Games</h1>
-    <p>Discover free online car games at Cool2Fun. Enjoy fast racing, smooth
-    driving and tricky parking challenges — all playable right in your browser,
-    no download needed.</p>
-  </section>
+  <div id="wrap">
+    <div id="gpt-300x600"></div>
+  </div>
 </body>
 </html>
