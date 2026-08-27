@@ -68,8 +68,12 @@ export function normalize(raw) {
     category: guessCategory(raw.name),
     type: raw.type,
   };
-  if (raw.type === "multi") game.base = raw.base;
-  else game.url = raw.url;
+  if (raw.type === "multi") {
+    // Multi-part games load either via a manifest (data-base) or an
+    // explicit list of part URLs (data-parts).
+    if (raw.parts) game.parts = raw.parts;
+    else game.base = raw.base;
+  } else game.url = raw.url;
   return game;
 }
 

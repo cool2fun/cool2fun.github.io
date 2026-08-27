@@ -79,8 +79,11 @@ function railItems(related) {
 function gamePage(g, related) {
   const icon = CATEGORY_ICONS[g.category] || "🎮";
   let dataAttrs;
-  if (g.type === "multi") dataAttrs = `data-type="multi" data-base="${esc(g.base)}"`;
-  else if (g.type === "iframe") dataAttrs = `data-type="iframe" data-url="${esc(g.url)}"`;
+  if (g.type === "multi") {
+    dataAttrs = g.parts
+      ? `data-type="multi" data-parts="${esc(g.parts.join(","))}"`
+      : `data-type="multi" data-base="${esc(g.base)}"`;
+  } else if (g.type === "iframe") dataAttrs = `data-type="iframe" data-url="${esc(g.url)}"`;
   else dataAttrs = `data-type="single" data-url="${esc(g.url)}"`;
   const kind = g.type === "iframe" ? "HTML5" : "Flash";
   const desc = `Play ${g.title} for free on Cool2Fun. A ${kind} ${g.category} game, running right in your browser with no download required.`;
@@ -116,9 +119,8 @@ function gamePage(g, related) {
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
   }
   </script>
-
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-S46EY1B2YL"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-S46EY1B2YL');</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MEMG4DZQCF"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-MEMG4DZQCF');</script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6556788076088846" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="/style.css">
 </head>
