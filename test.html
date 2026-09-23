@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test VAST Tag AdX - Netlink</title>
+  
+  <!-- Nhúng Google IMA SDK chuẩn -->
+  <script type="text/javascript" src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    #mainContainer {
+      position: relative;
+      width: 640px;
+      height: 360px;
+      background-color: #000000;
+      border: 2px solid #333333;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    #contentElement {
+      width: 100%;
+      height: 100%;
+    }
+
+    #adContainer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    button {
+      padding: 12px 28px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #ffffff;
+      background-color: #28a745;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    #statusLog {
+      margin-top: 15px;
+      font-family: monospace;
+      font-size: 14px;
+      color: #00ff00;
+      max-width: 640px;
+      word-break: break-all;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Kiểm Tra Luồng Video VAST Tag AdX</h2>
+  
+  <div id="mainContainer">
+    <video id="contentElement" playsinline></video>
+    <div id="adContainer"></div>
+  </div>
+
+  <button id="playButton">► BẤM ĐỂ LOAD QUẢNG CÁO</button>
+
+  <div id="statusLog">Trạng thái: Sẵn sàng test...</div>
+
+  <script>
+    // Link VAST Tag được cấp từ Netlink
+    const VAST_TAG_URL = 'https://pubads.g.doubleclick.net/gampad/ads?iu=/23332761288/cool2fun.github.io/cool2fun.github.io_vast&description_url=http%3A%2F%2Fcool2fun.github.io&tfcd=0&npa=0&sz=400x300%7C640x360%7C640x480&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&vpmute=1&plcmt=2&correlator=';
+
+    const videoElement = document.getElementById('contentElement');
+    const adContainer = document.getElementById('adContainer');
+    const playButton = document.getElementById('playButton');
+    const statusLog = document.getElementById('statusLog');
+
+    let adDisplayContainer;
+    let adsLoader;
+    let adsManager;
+
+    function updateLog(message, isError = false) {
+      statusLog.style.color = isError ? '#ff4d4d' : '#00ff00';
+      statusLog.innerText = 'Trạng thái: ' + message;
+      console.log('[VAST LOG]', message);
+    }
+
+    function initIMA() {
+      // Khởi tạo container chứa video quảng cáo
+      adDisplayContainer = new google.ima.AdDisplayContainer(adContainer, videoElement);
+      adsLoader = new google.ima.AdsLoader(adDisplayContainer);
+
+      adsLoader.addEventListener(
+        google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,
+        onAdsManagerLoaded,
+        false
+      );
+      adsLoader.addEventListener(
+        google.ima.AdErrorEvent.Type.AD_ERROR,
+        onAdError,
+        false
+      );
+    }
+
+    function requestAds() {
+      updateLog('Đang gửi yêu cầu quảng cáo lên AdX...');
+      adDisplayContainer.initialize();
+      
+      const adsRequest = new google.ima.AdsRequest();
+      adsRequest.adTagUrl = VAST_TAG_URL;
+      adsRequest.linearAdSlotWidth = 640;
+      adsRequest.linearAdSlotHeight = 360;
+
+      adsLoader.requestAds(adsRequest);
+    }
+
+    function onAdsManagerLoaded(adsManagerLoadedEvent) {
+      updateLog('Quảng cáo đã được AdX trả về! Đang khởi chạy...');
+      const adsRenderingSettings = new google.ima.AdsRenderingSettings();
+      adsRenderingSettings.restoreCustomPlaybackStateOnAdBreakComplete = true;
+
+      adsManager = adsManagerLoadedEvent.getAdsManager(videoElement, adsRenderingSettings);
+
+      adsManager.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, onAdError);
+      
+      adsManager.addEventListener(google.ima.AdEvent.Type.STARTED, function() {
+        updateLog('>>> THÀNH CÔNG: Video quảng cáo đang phát! <<<');
+      });
+
+      adsManager.addEventListener(google.ima.AdEvent.Type.COMPLETE, function() {
+        updateLog('Đã xem xong video quảng cáo.');
+      });
+
+      try {
+        adsManager.init(640, 360, google.ima.ViewMode.NORMAL);
+        adsManager.start();
+      } catch (adError) {
+        onAdError(adError);
+      }
+    }
+
+    function onAdError(adErrorEvent) {
+      const errorMsg = adErrorEvent.getError ? adErrorEvent.getError() : adErrorEvent;
+      updateLog('LỖI LOAD QUẢNG CÁO: ' + errorMsg, true);
+      if (adsManager) {
+        adsManager.destroy();
+      }
+    }
+
+    // Lắng nghe sự kiện click nút bấm để khởi chạy quảng cáo
+    playButton.addEventListener('click', function() {
+      if (!adDisplayContainer) {
+        initIMA();
+      }
+      requestAds();
+    });
+  </script>
+</body>
+</html>
