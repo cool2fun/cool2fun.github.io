@@ -1,25 +1,63 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unblocked Games At Schoools</title>
-<script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
-<script>
-  window.googletag = window.googletag || {cmd: []};
-  googletag.cmd.push(function() {
-    googletag.defineSlot('/23136362493/970x250-ADS', [970, 90], 'div-gpt-ad-1787498604570-0').addService(googletag.pubads());
-    googletag.pubads().enableSingleRequest();
-    googletag.enableServices();
-  });
-</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Advertisement</title>
+  <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
+  <style>
+    html, body { margin: 0; min-width: 0; min-height: 90px; background: transparent; overflow-x: hidden; }
+    #ad-wrap, #div-gpt-ad-leaderboard { width: 100%; min-height: 90px; display: flex; justify-content: center; }
+    #div-gpt-ad-leaderboard iframe { max-width: 100%; }
+  </style>
 </head>
 <body>
-<!-- /23136362493/970x250-ADS -->
-<div id='div-gpt-ad-1787498604570-0' style='min-width: 970px; min-height: 90px;'>
+  <div id="ad-wrap"><div id="div-gpt-ad-leaderboard"></div></div>
   <script>
-    googletag.cmd.push(function() { googletag.display('div-gpt-ad-1787498604570-0'); });
+    (function () {
+      "use strict";
+      var slotId = "div-gpt-ad-leaderboard";
+      var query = new URLSearchParams(location.search);
+      var pageUrl = query.get("page_url") || query.get("url") || "";
+      var refUrl = query.get("ref") || document.referrer || "";
+      var refreshes = 0;
+      function validUrl(value) { return /^https?:\/\//i.test(value || ""); }
+      function setContext(url, ref) {
+        if (validUrl(url) && (!validUrl(pageUrl) || /googleusercontent|script\.google/i.test(pageUrl))) pageUrl = url;
+        if (!refUrl && validUrl(ref)) refUrl = ref;
+      }
+      window.addEventListener("message", function (event) {
+        var data = event.data || {};
+        if (data.type === "ads-wrapper-ready" || data.type === "google-sites-context") setContext(data.url || data.page_url, data.ref || data.referrer);
+      });
+      try { window.parent.postMessage({ type: "ads-wrapper-request-context" }, "*"); } catch (e) {}
+      window.googletag = window.googletag || { cmd: [] };
+      googletag.cmd.push(function () {
+        googletag.pubads().collapseEmptyDivs(true);
+        googletag.pubads().enableSingleRequest();
+        googletag.pubads().setCentering(true);
+        googletag.pubads().setSafeFrameConfig({ allowPushExpansion: true });
+        if (validUrl(pageUrl)) {
+          try { googletag.pubads().setLocation(pageUrl); } catch (e) {}
+          try { googletag.pubads().setTargeting("page_url", pageUrl); } catch (e) {}
+        }
+        if (validUrl(refUrl)) try { googletag.pubads().setTargeting("ref", refUrl); } catch (e) {}
+        var mapping = googletag.sizeMapping()
+          .addSize([970, 0], [[970, 250], [970, 90], [728, 90]])
+          .addSize([728, 0], [[728, 90], [336, 280], [320, 100]])
+          .addSize([0, 0], [[336, 280], [320, 100], [320, 50]])
+          .build();
+        var slot = googletag.defineSlot("/23136362493/970x250-ADS", [[970, 250], [970, 90], [728, 90], [336, 280], [320, 100], [320, 50]], slotId)
+          .defineSizeMapping(mapping).addService(googletag.pubads());
+        googletag.pubads().addEventListener("slotRenderEnded", function (event) {
+          if (event.slot !== slot || !event.isEmpty || refreshes >= 2) return;
+          refreshes++;
+          window.setTimeout(function () { googletag.pubads().refresh([slot]); }, 5000 * refreshes);
+        });
+        googletag.enableServices();
+        googletag.display(slotId);
+      });
+    }());
   </script>
-</div>
 </body>
 </html>
