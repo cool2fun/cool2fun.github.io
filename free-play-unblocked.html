@@ -4,15 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ads 970x250</title>
-<script src="https://jsc.adskeeper.com/site/1112950.js" async>
-</script>
-
+    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
+    <style>
+      html, body { margin:0; padding:0; width:970px; height:250px; overflow:hidden; background:transparent; }
+      #div-gpt-ad-1790219733264-0 { width:970px; height:250px; }
+    </style>
+    <script>
+      function getParam(name) {
+        try {
+          var m = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+          return m ? decodeURIComponent(m[1].replace(/\+/g,' ')) : '';
+        } catch(e){ return ''; }
+      }
+      var pageUrl = getParam('page_url');
+      var refUrl  = getParam('ref');
+      window.addEventListener('message', function(e){
+        if (e.data && e.data.type === 'ads-wrapper-ready' && e.data.url) {
+          if (!pageUrl || pageUrl.indexOf('googleusercontent') !== -1 || pageUrl.indexOf('script.google') !== -1) {
+            pageUrl = e.data.url;
+          }
+          if (e.data.ref && !refUrl) refUrl = e.data.ref;
+        }
+      });
+      window.googletag = window.googletag || {cmd: []};
+      googletag.cmd.push(function() {
+        if (pageUrl) {
+          try { googletag.pubads().setLocation(pageUrl); } catch(e){}
+          try { googletag.pubads().setTargeting('page_url', pageUrl); } catch(e){}
+          if (refUrl) try { googletag.pubads().setTargeting('ref', refUrl); } catch(e){}
+        }
+        googletag.pubads().collapseEmptyDivs(false);
+        googletag.pubads().enableSingleRequest();
+        googletag.pubads().setCentering(false);
+        googletag.pubads().setSafeFrameConfig({ allowPushExpansion: true });
+        var slot = googletag.defineSlot('/23136362493/970x250-ADS', [[970, 90], [970, 250]], 'div-gpt-ad-1790219733264-0')
+          .addService(googletag.pubads());
+        var refreshCount = 0;
+        googletag.pubads().addEventListener('slotRenderEnded', function(event) {
+          if (event.slot === slot && event.isEmpty && refreshCount < 3) {
+            refreshCount++;
+            setTimeout(function(){ googletag.pubads().refresh([slot]); }, 4000 * refreshCount);
+          }
+        });
+        googletag.pubads().disableInitialLoad();
+        googletag.enableServices();
+        googletag.display('div-gpt-ad-1790219733264-0');
+        googletag.pubads().refresh([slot]);
+      });
+    </script>
 </head>
 <body>
-<div data-type="_mgwidget" data-widget-id="2086886">
-</div>
-<script>(function(w,q){w[q]=w[q]||[];w[q].push(["_mgc.load"])})(window,"_mgq");
-</script>
-
+    <!-- /23136362493/970x250-ADS -->
+    <div id='div-gpt-ad-1790219733264-0' style='width:970px;height:250px;'></div>
 </body>
 </html>
