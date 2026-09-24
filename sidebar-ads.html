@@ -1,68 +1,60 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Advertisement</title>
-  <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
-  <style>
-    html, body { margin: 0; min-width: 0; min-height: 100%; background: transparent; }
-    body { display: flex; justify-content: center; overflow-x: hidden; }
-    #ad-wrap, #div-gpt-ad-sidebar { width: 100%; min-height: 90px; display: flex; justify-content: center; }
-    #div-gpt-ad-sidebar iframe { max-width: 100%; }
-    @media (min-width: 340px) { #ad-wrap, #div-gpt-ad-sidebar { max-width: 300px; } }
-    @media (min-width: 640px) { #ad-wrap, #div-gpt-ad-sidebar { min-height: 250px; } }
-  </style>
-</head>
-<body>
-  <div id="ad-wrap"><div id="div-gpt-ad-sidebar"></div></div>
-  <script>
-    (function () {
-      "use strict";
-      var slotId = "div-gpt-ad-sidebar";
-      var query = new URLSearchParams(location.search);
-      var pageUrl = query.get("page_url") || query.get("url") || "";
-      var refUrl = query.get("ref") || document.referrer || "";
-      var refreshes = 0;
-      var readyUrl = pageUrl;
-      function validUrl(value) { return /^https?:\/\//i.test(value || ""); }
-      function setContext(url, ref) {
-        if (validUrl(url) && (!validUrl(readyUrl) || /googleusercontent|script\.google/i.test(readyUrl))) readyUrl = url;
-        if (!refUrl && validUrl(ref)) refUrl = ref;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ads 300x600</title>
+    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
+    <style>
+      html, body { margin:0; padding:0; width:300px; height:600px; overflow:hidden; background:transparent; }
+      #div-gpt-ad-1787498389104-0 { width:300px; height:600px; }
+    </style>
+    <script>
+      function getParam(name) {
+        try {
+          var m = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+          return m ? decodeURIComponent(m[1].replace(/\+/g,' ')) : '';
+        } catch(e){ return ''; }
       }
-      window.addEventListener("message", function (event) {
-        var data = event.data || {};
-        if (data.type === "ads-wrapper-ready" || data.type === "google-sites-context") setContext(data.url || data.page_url, data.ref || data.referrer);
+      var pageUrl = getParam('page_url');
+      var refUrl  = getParam('ref');
+      // Dự phòng: nhận qua postMessage nếu URL bị cắt
+      window.addEventListener('message', function(e){
+        if (e.data && e.data.type === 'ads-wrapper-ready' && e.data.url) {
+          if (!pageUrl || pageUrl.indexOf('googleusercontent') !== -1 || pageUrl.indexOf('script.google') !== -1) {
+            pageUrl = e.data.url;
+          }
+          if (e.data.ref && !refUrl) refUrl = e.data.ref;
+        }
       });
-      try { window.parent.postMessage({ type: "ads-wrapper-request-context" }, "*"); } catch (e) {}
-      window.googletag = window.googletag || { cmd: [] };
-      googletag.cmd.push(function () {
-        // Keep the Google Sites iframe dimensions stable even when a bid is empty.
+      window.googletag = window.googletag || {cmd: []};
+      googletag.cmd.push(function() {
+        if (pageUrl) {
+          try { googletag.pubads().setLocation(pageUrl); } catch(e){}
+          try { googletag.pubads().setTargeting('page_url', pageUrl); } catch(e){}
+          if (refUrl) try { googletag.pubads().setTargeting('ref', refUrl); } catch(e){}
+        }
         googletag.pubads().collapseEmptyDivs(false);
         googletag.pubads().enableSingleRequest();
-        googletag.pubads().setCentering(true);
+        googletag.pubads().setCentering(false);
         googletag.pubads().setSafeFrameConfig({ allowPushExpansion: true });
-        if (validUrl(readyUrl)) {
-          try { googletag.pubads().setLocation(readyUrl); } catch (e) {}
-          try { googletag.pubads().setTargeting("page_url", readyUrl); } catch (e) {}
-        }
-        if (validUrl(refUrl)) try { googletag.pubads().setTargeting("ref", refUrl); } catch (e) {}
-        var mapping = googletag.sizeMapping()
-          .addSize([640, 0], [[300, 600], [300, 250], [336, 280]])
-          .addSize([300, 0], [[300, 600], [300, 250], [336, 280], [300, 100]])
-          .addSize([0, 0], [[320, 100], [300, 100], [320, 50]])
-          .build();
-        var slot = googletag.defineSlot("/23136362493/300x600-ADS", [[300, 600], [300, 250], [336, 280], [320, 100], [300, 100], [320, 50]], slotId)
-          .defineSizeMapping(mapping).addService(googletag.pubads());
-        googletag.pubads().addEventListener("slotRenderEnded", function (event) {
-          if (event.slot !== slot || !event.isEmpty || refreshes >= 2) return;
-          refreshes++;
-          window.setTimeout(function () { googletag.pubads().refresh([slot]); }, 5000 * refreshes);
+        var slot = googletag.defineSlot('/23136362493/300x600-ADS', [300, 600], 'div-gpt-ad-1787498389104-0')
+          .addService(googletag.pubads());
+        var refreshCount = 0;
+        googletag.pubads().addEventListener('slotRenderEnded', function(event) {
+          if (event.slot === slot && event.isEmpty && refreshCount < 3) {
+            refreshCount++;
+            setTimeout(function(){ googletag.pubads().refresh([slot]); }, 4000 * refreshCount);
+          }
         });
+        googletag.pubads().disableInitialLoad();
         googletag.enableServices();
-        googletag.display(slotId);
+        googletag.display('div-gpt-ad-1787498389104-0');
+        googletag.pubads().refresh([slot]);
       });
-    }());
-  </script>
+    </script>
+</head>
+<body>
+    <div id='div-gpt-ad-1787498389104-0' style='width:300px;height:600px;'></div>
 </body>
 </html>
