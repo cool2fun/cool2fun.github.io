@@ -1,5 +1,5 @@
 /*
- * Shared Ruffle player + pre-roll ad overlay.
+ * Shared Ruffle player + VAST pre-roll ad overlay.
  * Reads game metadata from #play-frame data-* attributes:
  *   data-type  = "single" | "multi"
  *   data-url   = .swf URL                        (single)
@@ -10,7 +10,7 @@
 (function () {
   "use strict";
 
-  var COUNTDOWN_SECONDS = 5;
+  var VAST_TAG = "https://pubads.g.doubleclick.net/gampad/ads?iu=/23332761288/cool2fun.github.io/cool2fun.github.io_vast&description_url=http%3A%2F%2Fcool2fun.github.io&tfcd=0&npa=0&sz=400x300%7C640x360%7C640x480&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&vpmute=1";
 
   var frame = document.getElementById("play-frame");
   if (!frame) return;
@@ -201,9 +201,53 @@
     else loadSingle();
   }
 
-  // ---- Pre-roll ad overlay ----
+  // ---- VAST pre-roll ad overlay ----
+  function track(url) {
+    if (!url) return;
+    try { (new Image()).src = url; } catch (e) {}
+  }
+
+  function loadVastAd(overlay, status) {
+    fetch(VAST_TAG, { credentials: "omit" })
+      .then(function (response) {
+        if (!response.ok) throw new Error("VAST HTTP " + response.status);
+        return response.text();
+      })
+      .then(function (xml) {
+        var doc = new DOMParser().parseFromString(xml, "text/xml");
+        var linear = doc.querySelector("Ad Linear");
+        var media = linear && linear.querySelector("MediaFile");
+        if (!linear || !media) throw new Error("No playable VAST ad");
+        var impression = doc.querySelector("Impression");
+        if (impression) track(impression.textContent.trim());
+        var video = document.createElement("video");
+        video.className = "vast-video";
+        video.muted = true;
+        video.autoplay = true;
+        video.playsInline = true;
+        video.src = media.textContent.trim();
+        overlay.insertBefore(video, overlay.firstChild);
+        status.textContent = "Advertisement";
+        video.addEventListener("ended", function () {
+          var complete = linear.querySelectorAll('Tracking[event="complete"]');
+          Array.prototype.forEach.call(complete, function (node) { track(node.textContent.trim()); });
+          overlay.remove();
+          startGame();
+        });
+        video.addEventListener("error", function () { overlay.remove(); startGame(); });
+        var play = video.play();
+        if (play && play.catch) play.catch(function () { overlay.remove(); startGame(); });
+      })
+      .catch(function () { overlay.remove(); startGame(); });
+  }
+
   function buildOverlay() {
     var overlay = el("div", "play-overlay");
+    var vastStatus = el("p", "overlay-status", "Advertisement loading...");
+    overlay.appendChild(vastStatus);
+    frame.appendChild(overlay);
+    loadVastAd(overlay, vastStatus);
+    return;
 
     var adBox = el("div", "overlay-ad");
     adBox.setAttribute("data-ad", "overlay");

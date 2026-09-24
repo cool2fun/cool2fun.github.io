@@ -280,6 +280,16 @@ img { max-width: 100%; display: block; }
   text-align: center;
 }
 
+/* Inline VAST creative shown before the shared game player starts. */
+.vast-video {
+  display: block;
+  width: min(100%, 640px);
+  max-height: 360px;
+  margin: 0 auto 12px;
+  background: #000;
+  object-fit: contain;
+}
+
 .overlay-ad {
   max-width: 100%;
   display: flex;
