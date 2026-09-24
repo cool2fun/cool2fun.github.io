@@ -33,7 +33,8 @@
       try { window.parent.postMessage({ type: "ads-wrapper-request-context" }, "*"); } catch (e) {}
       window.googletag = window.googletag || { cmd: [] };
       googletag.cmd.push(function () {
-        googletag.pubads().collapseEmptyDivs(true);
+        // Keep the Google Sites iframe dimensions stable even when a bid is empty.
+        googletag.pubads().collapseEmptyDivs(false);
         googletag.pubads().enableSingleRequest();
         googletag.pubads().setCentering(true);
         googletag.pubads().setSafeFrameConfig({ allowPushExpansion: true });

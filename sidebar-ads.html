@@ -37,7 +37,8 @@
       try { window.parent.postMessage({ type: "ads-wrapper-request-context" }, "*"); } catch (e) {}
       window.googletag = window.googletag || { cmd: [] };
       googletag.cmd.push(function () {
-        googletag.pubads().collapseEmptyDivs(true);
+        // Keep the Google Sites iframe dimensions stable even when a bid is empty.
+        googletag.pubads().collapseEmptyDivs(false);
         googletag.pubads().enableSingleRequest();
         googletag.pubads().setCentering(true);
         googletag.pubads().setSafeFrameConfig({ allowPushExpansion: true });
@@ -51,7 +52,7 @@
           .addSize([300, 0], [[300, 600], [300, 250], [336, 280], [300, 100]])
           .addSize([0, 0], [[320, 100], [300, 100], [320, 50]])
           .build();
-        var slot = googletag.defineSlot("/23136362493/300x600-ADS", [[300, 600], [300, 250], [336, 280]], slotId)
+        var slot = googletag.defineSlot("/23136362493/300x600-ADS", [[300, 600], [300, 250], [336, 280], [320, 100], [300, 100], [320, 50]], slotId)
           .defineSizeMapping(mapping).addService(googletag.pubads());
         googletag.pubads().addEventListener("slotRenderEnded", function (event) {
           if (event.slot !== slot || !event.isEmpty || refreshes >= 2) return;
