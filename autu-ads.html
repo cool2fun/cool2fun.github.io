@@ -10,78 +10,51 @@
       #div-gpt-ad-1787498389104-0 { width:300px; height:600px; }
     </style>
     <script>
-      // Lấy page_url thật từ wrapper Apps Script truyền sang
       function getParam(name) {
         try {
           var m = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
-          return m ? decodeURIComponent(m[1].replace(/\+/g, ' ')) : '';
-        } catch(e) { return ''; }
+          return m ? decodeURIComponent(m[1].replace(/\+/g,' ')) : '';
+        } catch(e){ return ''; }
       }
       var pageUrl = getParam('page_url');
       var refUrl  = getParam('ref');
-
-      // Báo cho GAM biết URL trang thật (quan trọng nhất để không mất fill)
+      // Dự phòng: nhận qua postMessage nếu URL bị cắt
+      window.addEventListener('message', function(e){
+        if (e.data && e.data.type === 'ads-wrapper-ready' && e.data.url) {
+          if (!pageUrl || pageUrl.indexOf('googleusercontent') !== -1 || pageUrl.indexOf('script.google') !== -1) {
+            pageUrl = e.data.url;
+          }
+          if (e.data.ref && !refUrl) refUrl = e.data.ref;
+        }
+      });
       window.googletag = window.googletag || {cmd: []};
       googletag.cmd.push(function() {
-        // Gửi page_url thật thay vì cool2fun.github.io
         if (pageUrl) {
-          try { googletag.pubads().setLocation(pageUrl); } catch(e) {}
-          googletag.pubads().setTargeting('page_url', pageUrl);
-          // Báo referrer thật
-          if (refUrl) googletag.pubads().setTargeting('ref', refUrl);
+          try { googletag.pubads().setLocation(pageUrl); } catch(e){}
+          try { googletag.pubads().setTargeting('page_url', pageUrl); } catch(e){}
+          if (refUrl) try { googletag.pubads().setTargeting('ref', refUrl); } catch(e){}
         }
-
-        // Cấu hình để tăng fill
-        googletag.pubads().collapseEmptyDivs(false); // không collapse để giữ layout 300x600 luôn viewable
+        googletag.pubads().collapseEmptyDivs(false);
         googletag.pubads().enableSingleRequest();
         googletag.pubads().setCentering(false);
-        // Cho phép safeFrame hoạt động đúng trong iframe lồng nhau
-        googletag.pubads().setSafeFrameConfig({ allowPushExpansion: true, sandbox: false });
-
+        googletag.pubads().setSafeFrameConfig({ allowPushExpansion: true });
         var slot = googletag.defineSlot('/23136362493/300x600-ADS', [300, 600], 'div-gpt-ad-1787498389104-0')
           .addService(googletag.pubads());
-
-        // Xử lý khi không fill -> tự refresh 3 lần (tránh trống trắng)
         var refreshCount = 0;
         googletag.pubads().addEventListener('slotRenderEnded', function(event) {
           if (event.slot === slot && event.isEmpty && refreshCount < 3) {
             refreshCount++;
-            setTimeout(function() { googletag.pubads().refresh([slot]); }, 5000 * refreshCount);
+            setTimeout(function(){ googletag.pubads().refresh([slot]); }, 4000 * refreshCount);
           }
         });
-
-        // Tắt lazy load để impression tính ngay khi viewable (Google Sites hay bóp viewport)
-        googletag.pubads().enableLazyLoad({ fetchMarginPercent: -1, renderMarginPercent: -1, mobileScaling: 1.0 });
-
+        googletag.pubads().disableInitialLoad();
         googletag.enableServices();
-      });
-
-      // Lắng nghe tín hiệu từ wrapper Apps Script
-      window.addEventListener('message', function(e) {
-        if (e.data && e.data.type === 'ads-wrapper-ready') {
-          // Đảm bảo GAM đã init
-          googletag.cmd.push(function() { googletag.display('div-gpt-ad-1787498389104-0'); });
-        }
+        googletag.display('div-gpt-ad-1787498389104-0');
+        googletag.pubads().refresh([slot]);
       });
     </script>
 </head>
 <body>
-    <!-- /23136362493/300x600-ADS -->
-    <div id='div-gpt-ad-1787498389104-0' style='min-width: 300px; min-height: 600px;'>
-      <script>
-        googletag.cmd.push(function() { googletag.display('div-gpt-ad-1787498389104-0'); });
-      </script>
-    </div>
-    <script>
-      // Fallback: nếu sau 1.5s chưa display do message chưa tới
-      setTimeout(function(){
-        try {
-          var el = document.getElementById('div-gpt-ad-1787498389104-0');
-          if (el && el.innerHTML.trim() === '') {
-            googletag.cmd.push(function(){ googletag.display('div-gpt-ad-1787498389104-0'); });
-          }
-        } catch(e){}
-      }, 1500);
-    </script>
+    <div id='div-gpt-ad-1787498389104-0' style='width:300px;height:600px;'></div>
 </body>
 </html>
