@@ -3,101 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang Web Demo Quảng Cáo</title>
-    
-    <!-- Các thẻ CSS cơ bản để trình bày cho dễ nhìn -->
+    <title>Quảng cáo 970x250</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
+        * {
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
+            box-sizing: border-box;
         }
-        .container {
-            width: 80%;
-            margin: 20px auto;
-            background: #fff;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        header {
-            background: #35424a;
-            color: #ffffff;
-            padding-top: 30px;
-            min-height: 70px;
-            border-bottom: #e8491d 3px solid;
-            text-align: center;
-        }
-        /* Style cho vùng quảng cáo để nổi bật và giữ chỗ trống trước khi load */
-        .ad-container {
-            text-align: center;
-            margin: 25px 0;
-            padding: 10px;
-            background-color: #e9ecef;
-            border: 1px dashed #ccc;
-            min-height: 250px; /* Chiều cao tối thiểu, thay đổi theo size QC */
+        body {
+            background-color: #f0f2f5;
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
+            min-height: 100vh;
+            overflow: hidden;
         }
-        .ad-label {
-            font-size: 12px;
-            color: #777;
-            margin-bottom: 5px;
+        .ad-wrapper {
+            width: 970px;
+            height: 250px;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
     </style>
-
-    <!-- 
-    ====================================================================
-    1. KHAI BÁO SCRIPT CỦA MẠNG QUẢNG CÁO
-    Nên đặt trong <head> hoặc trước </body>. Gọi 1 lần duy nhất cho toàn trang.
-    ==================================================================== 
-    -->
-    <script async src="https://aj1047.online/194c03ba.js"></script>
     
+    <!-- Script gọi quảng cáo -->
+    <script async src="https://aj1047.online/194c03ba.js"></script>
 </head>
 <body>
 
-    <header>
-        <h1>Trang Web Demo Cấu Hình Quảng Cáo Epom</h1>
-    </header>
-
-    <div class="container">
-        <h2>Bài Viết Chính</h2>
-        <p>Đây là nội dung bài viết của bạn. Dưới đây là vị trí quảng cáo đầu tiên (Ví dụ: Quảng cáo đầu bài viết).</p>
-
-        <!-- 
-        ====================================================================
-        2. VỊ TRÍ QUẢNG CÁO SỐ 1
-        Sử dụng mã data-key bạn đã cung cấp.
-        ==================================================================== 
-        -->
-        <div class="ad-container">
-            <div class="ad-label">- Advertisement -</div>
-            <ins class="3b35b82f" data-key="af9883164a567ae1651d0fda7a578475"></ins>
-        </div>
-
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-        
-        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-        <!-- 
-        ====================================================================
-        3. VỊ TRÍ QUẢNG CÁO SỐ 2 (Nếu có)
-        LƯU Ý: Phải sử dụng data-key KHÁC với vị trí 1, lấy từ Dashboard.
-        Ở đây tôi để tạm 1 chuỗi giả lập "MÃ_KEY_VỊ_TRÍ_2"
-        ==================================================================== 
-        -->
-        <div class="ad-container">
-            <div class="ad-label">- Advertisement -</div>
-            <!-- Thay "MÃ_KEY_VỊ_TRÍ_2" bằng key thực tế của vị trí 2 -->
-            <ins class="3b35b82f" data-key="MÃ_KEY_VỊ_TRÍ_2"></ins>
-        </div>
-
-        <p>Phần kết luận của bài viết. Cảm ơn bạn đã đọc!</p>
+    <!-- Khung chứa duy nhất quảng cáo 970x250 -->
+    <div class="ad-wrapper">
+        <ins class="3b35b82f" 
+             data-key="af9883164a567ae1651d0fda7a578475" 
+             style="display: inline-block; width: 970px; height: 250px;">
+        </ins>
     </div>
 
 </body>
