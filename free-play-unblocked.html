@@ -1,60 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads 970x250</title>
-    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
+    <title>Trang Web Demo Quảng Cáo</title>
+    
+    <!-- Các thẻ CSS cơ bản để trình bày cho dễ nhìn -->
     <style>
-      html, body { margin:0; padding:0; width:970px; height:250px; overflow:hidden; background:transparent; }
-      #div-gpt-ad-1790219733264-0 { width:970px; height:250px; }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        header {
+            background: #35424a;
+            color: #ffffff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #e8491d 3px solid;
+            text-align: center;
+        }
+        /* Style cho vùng quảng cáo để nổi bật và giữ chỗ trống trước khi load */
+        .ad-container {
+            text-align: center;
+            margin: 25px 0;
+            padding: 10px;
+            background-color: #e9ecef;
+            border: 1px dashed #ccc;
+            min-height: 250px; /* Chiều cao tối thiểu, thay đổi theo size QC */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .ad-label {
+            font-size: 12px;
+            color: #777;
+            margin-bottom: 5px;
+        }
     </style>
-    <script>
-      function getParam(name) {
-        try {
-          var m = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
-          return m ? decodeURIComponent(m[1].replace(/\+/g,' ')) : '';
-        } catch(e){ return ''; }
-      }
-      var pageUrl = getParam('page_url');
-      var refUrl  = getParam('ref');
-      window.addEventListener('message', function(e){
-        if (e.data && e.data.type === 'ads-wrapper-ready' && e.data.url) {
-          if (!pageUrl || pageUrl.indexOf('googleusercontent') !== -1 || pageUrl.indexOf('script.google') !== -1) {
-            pageUrl = e.data.url;
-          }
-          if (e.data.ref && !refUrl) refUrl = e.data.ref;
-        }
-      });
-      window.googletag = window.googletag || {cmd: []};
-      googletag.cmd.push(function() {
-        if (pageUrl) {
-          try { googletag.pubads().setLocation(pageUrl); } catch(e){}
-          try { googletag.pubads().setTargeting('page_url', pageUrl); } catch(e){}
-          if (refUrl) try { googletag.pubads().setTargeting('ref', refUrl); } catch(e){}
-        }
-        googletag.pubads().collapseEmptyDivs(false);
-        googletag.pubads().enableSingleRequest();
-        googletag.pubads().setCentering(false);
-        googletag.pubads().setSafeFrameConfig({ allowPushExpansion: true });
-        var slot = googletag.defineSlot('/23136362493/970x250-ADS', [[970, 90], [970, 250]], 'div-gpt-ad-1790219733264-0')
-          .addService(googletag.pubads());
-        var refreshCount = 0;
-        googletag.pubads().addEventListener('slotRenderEnded', function(event) {
-          if (event.slot === slot && event.isEmpty && refreshCount < 3) {
-            refreshCount++;
-            setTimeout(function(){ googletag.pubads().refresh([slot]); }, 4000 * refreshCount);
-          }
-        });
-        googletag.pubads().disableInitialLoad();
-        googletag.enableServices();
-        googletag.display('div-gpt-ad-1790219733264-0');
-        googletag.pubads().refresh([slot]);
-      });
-    </script>
+
+    <!-- 
+    ====================================================================
+    1. KHAI BÁO SCRIPT CỦA MẠNG QUẢNG CÁO
+    Nên đặt trong <head> hoặc trước </body>. Gọi 1 lần duy nhất cho toàn trang.
+    ==================================================================== 
+    -->
+    <script async src="https://aj1047.online/194c03ba.js"></script>
+    
 </head>
 <body>
-    <!-- /23136362493/970x250-ADS -->
-    <div id='div-gpt-ad-1790219733264-0' style='width:970px;height:250px;'></div>
+
+    <header>
+        <h1>Trang Web Demo Cấu Hình Quảng Cáo Epom</h1>
+    </header>
+
+    <div class="container">
+        <h2>Bài Viết Chính</h2>
+        <p>Đây là nội dung bài viết của bạn. Dưới đây là vị trí quảng cáo đầu tiên (Ví dụ: Quảng cáo đầu bài viết).</p>
+
+        <!-- 
+        ====================================================================
+        2. VỊ TRÍ QUẢNG CÁO SỐ 1
+        Sử dụng mã data-key bạn đã cung cấp.
+        ==================================================================== 
+        -->
+        <div class="ad-container">
+            <div class="ad-label">- Advertisement -</div>
+            <ins class="3b35b82f" data-key="af9883164a567ae1651d0fda7a578475"></ins>
+        </div>
+
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        
+        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+        <!-- 
+        ====================================================================
+        3. VỊ TRÍ QUẢNG CÁO SỐ 2 (Nếu có)
+        LƯU Ý: Phải sử dụng data-key KHÁC với vị trí 1, lấy từ Dashboard.
+        Ở đây tôi để tạm 1 chuỗi giả lập "MÃ_KEY_VỊ_TRÍ_2"
+        ==================================================================== 
+        -->
+        <div class="ad-container">
+            <div class="ad-label">- Advertisement -</div>
+            <!-- Thay "MÃ_KEY_VỊ_TRÍ_2" bằng key thực tế của vị trí 2 -->
+            <ins class="3b35b82f" data-key="MÃ_KEY_VỊ_TRÍ_2"></ins>
+        </div>
+
+        <p>Phần kết luận của bài viết. Cảm ơn bạn đã đọc!</p>
+    </div>
+
 </body>
 </html>
