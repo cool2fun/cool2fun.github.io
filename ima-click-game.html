@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101820">
+  <title>Tap Rush - VAST demo</title>
+  <script src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
+  <style>
+    :root { --ink: #eef6f4; --muted: #a8bbb8; --bg: #101820; --panel: #18272b; --mint: #8ee3c0; --orange: #ffb45b; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; color: var(--ink); background: radial-gradient(circle at 15% 0, #30515a 0, transparent 36%), linear-gradient(145deg, #101820, #14272a); font: 16px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+    main { width: min(780px, calc(100% - 28px)); margin: 0 auto; padding: 38px 0 60px; }
+    header { display: flex; justify-content: space-between; gap: 16px; align-items: end; margin-bottom: 22px; }
+    h1 { margin: 0; font-size: clamp(2rem, 8vw, 4rem); line-height: .95; letter-spacing: -.06em; }
+    header p { max-width: 290px; margin: 0; color: var(--muted); }
+    .game-card { position: relative; padding: 18px; border: 1px solid #3e5b5d; border-radius: 22px; background: #102024cc; box-shadow: 0 24px 70px #0006; backdrop-filter: blur(8px); }
+    .hud { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; color: var(--muted); }
+    .score { color: var(--mint); font-size: 1.4rem; font-weight: 800; }
+    #arena { position: relative; overflow: hidden; min-height: 430px; border-radius: 15px; background: radial-gradient(circle at 50% 50%, #21434a, #0d171b 72%); cursor: crosshair; }
+    #arena::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .23; background-image: linear-gradient(#9bdcc022 1px, transparent 1px), linear-gradient(90deg, #9bdcc022 1px, transparent 1px); background-size: 32px 32px; }
+    #target { position: absolute; z-index: 2; display: none; width: 68px; height: 68px; transform: translate(-50%, -50%); border: 4px solid #fff8; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff7 0 8%, transparent 9%), var(--orange); box-shadow: 0 0 0 10px #ffb45b22, 0 0 32px #ffb45b99; }
+    #target:active { transform: translate(-50%, -50%) scale(.88); }
+    .overlay { position: absolute; z-index: 4; inset: 0; display: grid; place-items: center; padding: 24px; background: #0b1417c9; text-align: center; }
+    .overlay-card { max-width: 420px; }
+    .overlay h2 { margin: 0 0 8px; font-size: 2rem; }
+    .overlay p { margin: 0 0 18px; color: var(--muted); }
+    button { border: 0; border-radius: 999px; padding: 12px 20px; color: #12221f; background: var(--mint); cursor: pointer; font: inherit; font-weight: 800; }
+    button:disabled { cursor: wait; opacity: .6; }
+    #ad-stage { position: fixed; z-index: 20; inset: 0; display: none; place-items: center; padding: 16px; background: #05090bdd; }
+    #ad-box { position: relative; width: min(900px, 100%); aspect-ratio: 16 / 9; background: #000; border-radius: 12px; overflow: hidden; }
+    #ad-container { position: absolute; inset: 0; }
+    #content-video { width: 100%; height: 100%; object-fit: contain; background: #000; }
+    #ad-label { position: absolute; z-index: 2; top: 10px; left: 12px; padding: 3px 8px; border-radius: 5px; background: #0009; color: #fff; font-size: 12px; }
+    .status { min-height: 24px; margin-top: 12px; color: var(--muted); text-align: center; }
+    .config { margin-top: 15px; padding: 14px; border: 1px solid #31474a; border-radius: 12px; color: var(--muted); font-size: .85rem; }
+    code { color: #ffd28f; overflow-wrap: anywhere; }
+    @media (max-width: 600px) { header { display: block; } header p { margin-top: 14px; } #arena { min-height: 58vh; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div><h1>Tap Rush</h1></div>
+      <p>Chạm vào mục tiêu càng nhanh càng tốt trong 20 giây.</p>
+    </header>
+
+    <section class="game-card">
+      <div class="hud"><span>Thời gian: <strong id="time">20</strong>s</span><span class="score">Điểm: <strong id="score">0</strong></span></div>
+      <div id="arena">
+        <button id="target" aria-label="Mục tiêu"></button>
+        <div id="game-overlay" class="overlay">
+          <div class="overlay-card">
+            <h2 id="overlay-title">Sẵn sàng?</h2>
+            <p id="overlay-copy">Một quảng cáo VAST sẽ được tải trước khi ván chơi bắt đầu.</p>
+            <button id="start-button">Bắt đầu</button>
+          </div>
+        </div>
+      </div>
+      <div id="status" class="status">VAST tag đang dùng: tag mẫu của Google.</div>
+      <div class="config">Đổi URL trong biến <code>VAST_TAG_URL</code> ở cuối file trước khi upload lên GitHub Pages.</div>
+    </section>
+  </main>
+
+  <div id="ad-stage" aria-hidden="true">
+    <div id="ad-box">
+      <span id="ad-label">QUẢNG CÁO</span>
+      <video id="content-video" playsinline muted preload="auto"></video>
+      <div id="ad-container"></div>
+    </div>
+  </div>
+
+  <script>
+    // Replace this with the VAST tag URL from your ad provider.
+    const VAST_TAG_URL = 'https://pubads.g.doubleclick.net/gampad/ads?iu=/124319096/external/single_ad_samples&sz=640x480&cust_params=deployment%3Ddevsite%26sample_ct%3Dlinear&ciu_szs=300x250&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&correlator=';
+
+    (() => {
+      const arena = document.getElementById('arena');
+      const target = document.getElementById('target');
+      const overlay = document.getElementById('game-overlay');
+      const overlayTitle = document.getElementById('overlay-title');
+      const overlayCopy = document.getElementById('overlay-copy');
+      const startButton = document.getElementById('start-button');
+      const scoreNode = document.getElementById('score');
+      const timeNode = document.getElementById('time');
+      const status = document.getElementById('status');
+      const adStage = document.getElementById('ad-stage');
+      const adContainer = document.getElementById('ad-container');
+      const video = document.getElementById('content-video');
+      let adsLoader;
+      let adsManager;
+      let gameTimer;
+      let seconds = 20;
+      let score = 0;
+      let gameStarted = false;
+
+      const setStatus = (text) => { status.textContent = text; };
+
+      function setupIma() {
+        if (!window.google || !google.ima) throw new Error('IMA SDK chưa tải');
+        const displayContainer = new google.ima.AdDisplayContainer(adContainer, video);
+        adsLoader = new google.ima.AdsLoader(displayContainer);
+        adsLoader.addEventListener(google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED, onAdsManagerLoaded);
+        adsLoader.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, onAdError);
+        return displayContainer;
+      }
+
+      function onAdsManagerLoaded(event) {
+        adsManager = event.getAdsManager(video);
+        adsManager.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, onAdError);
+        adsManager.addEventListener(google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED, () => setStatus('Đang phát quảng cáo…'));
+        adsManager.addEventListener(google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED, finishAd);
+        adsManager.addEventListener(google.ima.AdEvent.Type.COMPLETE, finishAd);
+        try {
+          adsManager.init(adContainer.clientWidth, adContainer.clientHeight, google.ima.ViewMode.NORMAL);
+          adsManager.start();
+        } catch (error) { onAdError({ getError: () => error }); }
+      }
+
+      function onAdError(event) {
+        const error = event && event.getError ? event.getError() : event;
+        if (adsManager) { adsManager.destroy(); adsManager = null; }
+        adStage.style.display = 'none';
+        adStage.setAttribute('aria-hidden', 'true');
+        setStatus('Không tải được quảng cáo; bắt đầu game. ' + (error && error.message ? error.message : ''));
+        beginGame();
+      }
+
+      function finishAd() {
+        adStage.style.display = 'none';
+        adStage.setAttribute('aria-hidden', 'true');
+        setStatus('Quảng cáo xong. Chúc bạn chơi vui!');
+        beginGame();
+      }
+
+      function requestAdThenStart() {
+        startButton.disabled = true;
+        setStatus('Đang tải quảng cáo…');
+        if (!adsLoader) {
+          try { window.displayContainer = setupIma(); } catch (error) { onAdError(error); return; }
+        }
+        adStage.style.display = 'grid';
+        adStage.setAttribute('aria-hidden', 'false');
+        window.displayContainer.initialize();
+        const request = new google.ima.AdsRequest();
+        request.adTagUrl = VAST_TAG_URL;
+        request.linearAdSlotWidth = adContainer.clientWidth;
+        request.linearAdSlotHeight = adContainer.clientHeight;
+        request.nonLinearAdSlotWidth = adContainer.clientWidth;
+        request.nonLinearAdSlotHeight = Math.round(adContainer.clientHeight * .25);
+        adsLoader.requestAds(request);
+      }
+
+      function beginGame() {
+        if (gameStarted) return;
+        gameStarted = true;
+        overlay.style.display = 'none';
+        startButton.disabled = false;
+        score = 0; seconds = 20;
+        scoreNode.textContent = score; timeNode.textContent = seconds;
+        target.style.display = 'block'; moveTarget();
+        clearInterval(gameTimer);
+        gameTimer = setInterval(() => {
+          seconds -= 1; timeNode.textContent = seconds;
+          if (seconds <= 0) endGame();
+        }, 1000);
+      }
+
+      function endGame() {
+        clearInterval(gameTimer); gameStarted = false; target.style.display = 'none';
+        overlayTitle.textContent = 'Hết giờ!';
+        overlayCopy.textContent = 'Bạn đạt ' + score + ' điểm. Sẵn sàng chơi lại?';
+        startButton.textContent = 'Chơi lại'; overlay.style.display = 'grid';
+        setStatus('Ván chơi kết thúc.');
+      }
+
+      function moveTarget() {
+        const pad = 42;
+        const x = pad + Math.random() * Math.max(1, arena.clientWidth - pad * 2);
+        const y = pad + Math.random() * Math.max(1, arena.clientHeight - pad * 2);
+        target.style.left = x + 'px'; target.style.top = y + 'px';
+      }
+
+      target.addEventListener('click', () => { if (!gameStarted) return; score += 1; scoreNode.textContent = score; moveTarget(); });
+      startButton.addEventListener('click', () => {
+        overlayTitle.textContent = 'Đang chuẩn bị…'; overlayCopy.textContent = 'Vui lòng chờ quảng cáo kết thúc.';
+        requestAdThenStart();
+      });
+    })();
+  </script>
+</body>
+</html>
