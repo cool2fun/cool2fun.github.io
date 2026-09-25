@@ -1,46 +1,60 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quảng cáo 970x250</title>
+    <title>Ads 970x250</title>
+    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
-        }
-        .ad-wrapper {
-            width: 970px;
-            height: 250px;
-            background-color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
+      html, body { margin:0; padding:0; width:970px; height:250px; overflow:hidden; background:transparent; }
+      #div-gpt-ad-1790219733264-0 { width:970px; height:250px; }
     </style>
-    
-    <!-- Script gọi quảng cáo -->
-    <script async src="https://aj1047.online/194c03ba.js"></script>
+    <script>
+      function getParam(name) {
+        try {
+          var m = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+          return m ? decodeURIComponent(m[1].replace(/\+/g,' ')) : '';
+        } catch(e){ return ''; }
+      }
+      var pageUrl = getParam('page_url');
+      var refUrl  = getParam('ref');
+      window.addEventListener('message', function(e){
+        if (e.data && e.data.type === 'ads-wrapper-ready' && e.data.url) {
+          if (!pageUrl || pageUrl.indexOf('googleusercontent') !== -1 || pageUrl.indexOf('script.google') !== -1) {
+            pageUrl = e.data.url;
+          }
+          if (e.data.ref && !refUrl) refUrl = e.data.ref;
+        }
+      });
+      window.googletag = window.googletag || {cmd: []};
+      googletag.cmd.push(function() {
+        if (pageUrl) {
+          try { googletag.pubads().setLocation(pageUrl); } catch(e){}
+          try { googletag.pubads().setTargeting('page_url', pageUrl); } catch(e){}
+          if (refUrl) try { googletag.pubads().setTargeting('ref', refUrl); } catch(e){}
+        }
+        googletag.pubads().collapseEmptyDivs(false);
+        googletag.pubads().enableSingleRequest();
+        googletag.pubads().setCentering(false);
+        googletag.pubads().setSafeFrameConfig({ allowPushExpansion: true });
+        var slot = googletag.defineSlot('/23136362493/970x250-ADS', [[970, 90], [970, 250]], 'div-gpt-ad-1790219733264-0')
+          .addService(googletag.pubads());
+        var refreshCount = 0;
+        googletag.pubads().addEventListener('slotRenderEnded', function(event) {
+          if (event.slot === slot && event.isEmpty && refreshCount < 3) {
+            refreshCount++;
+            setTimeout(function(){ googletag.pubads().refresh([slot]); }, 4000 * refreshCount);
+          }
+        });
+        googletag.pubads().disableInitialLoad();
+        googletag.enableServices();
+        googletag.display('div-gpt-ad-1790219733264-0');
+        googletag.pubads().refresh([slot]);
+      });
+    </script>
 </head>
 <body>
-
-    <!-- Khung chứa duy nhất quảng cáo 970x250 -->
-    <div class="ad-wrapper">
-        <ins class="3b35b82f" 
-             data-key="af9883164a567ae1651d0fda7a578475" 
-             style="display: inline-block; width: 970px; height: 250px;">
-        </ins>
-    </div>
-
+    <!-- /23136362493/970x250-ADS -->
+    <div id='div-gpt-ad-1790219733264-0' style='width:970px;height:250px;'></div>
 </body>
 </html>
