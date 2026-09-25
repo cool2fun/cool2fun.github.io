@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script id="splash-runtime-prelude-v3">
+(function(){
+  if(/script\.googleusercontent\.com$/i.test(location.hostname)&&!window.__splashDocumentDomainGuardV3){
+    var domainOwner=document;
+    var domainDescriptor=null;
+    while(domainOwner&&!domainDescriptor){
+      domainDescriptor=Object.getOwnPropertyDescriptor(domainOwner,"domain");
+      domainOwner=Object.getPrototypeOf(domainOwner);
+    }
+    if(domainDescriptor&&typeof domainDescriptor.get==="function"&&typeof domainDescriptor.set==="function"){
+      Object.defineProperty(document,"domain",{
+        configurable:true,
+        enumerable:Boolean(domainDescriptor.enumerable),
+        get:function(){return domainDescriptor.get.call(this)},
+        set:function(value){
+          try{return domainDescriptor.set.call(this,value)}
+          catch(error){
+            var message=String(error&&error.message||error||"");
+            if(error&&error.name==="SecurityError"&&/^(?:Failed to set the 'domain' property on 'Document': )?Assignment is forbidden for sandboxed iframes\.?$/i.test(message))return;
+            throw error;
+          }
+        }
+      });
+      window.__splashDocumentDomainGuardV3=true;
+    }
+  }
+  var contexts=[];
+  window.__splashAudioContextsV3=contexts;
+  try{
+    var Native=window.AudioContext||window.webkitAudioContext;
+    if(Native){
+      function TrackedAudioContext(){var context=Reflect.construct(Native,arguments,TrackedAudioContext);contexts.push(context);return context}
+      Object.setPrototypeOf(TrackedAudioContext,Native);
+      TrackedAudioContext.prototype=Native.prototype;
+      if(window.AudioContext)window.AudioContext=TrackedAudioContext;
+      if(window.webkitAudioContext)window.webkitAudioContext=TrackedAudioContext;
+    }
+  }catch(_){}
+  try{
+    if(navigator.serviceWorker&&/script\.googleusercontent\.com$/i.test(location.hostname)){
+      navigator.serviceWorker.register=function(){
+        return Promise.resolve({scope:location.href,unregister:function(){return Promise.resolve(true)},update:function(){return Promise.resolve()}});
+      };
+    }
+  }catch(_){}
+  try{
+    if(window.XMLHttpRequest&&/script\.googleusercontent\.com$/i.test(location.hostname)&&!window.__splashCrossOriginXhrV3){
+      var xhrOpen=XMLHttpRequest.prototype.open;
+      var xhrSetRequestHeader=XMLHttpRequest.prototype.setRequestHeader;
+      XMLHttpRequest.prototype.open=function(method,url){
+        this.__splashCrossOriginRequestV3=false;
+        try{this.__splashCrossOriginRequestV3=new URL(String(url),document.baseURI).origin!==location.origin}catch(_){}
+        return xhrOpen.apply(this,arguments);
+      };
+      XMLHttpRequest.prototype.setRequestHeader=function(name,value){
+        if(this.__splashCrossOriginRequestV3&&/^x-requested-with$/i.test(String(name)))return;
+        return xhrSetRequestHeader.call(this,name,value);
+      };
+      window.__splashCrossOriginXhrV3=true;
+    }
+  }catch(_){}
+})();
+</script>
+<script id="splash-storage-shim-v1">
+(function(){
+  try{
+    var t = window.localStorage;
+    if(t) t.getItem('__splash_probe__');
+  }catch(e){
+    try{
+      var mem={};
+      var fake={
+        getItem:function(k){ return Object.prototype.hasOwnProperty.call(mem,k) ? mem[k] : null; },
+        setItem:function(k,v){ mem[k]=String(v); },
+        removeItem:function(k){ delete mem[k]; },
+        clear:function(){ for(var k in mem) delete mem[k]; },
+        key:function(i){ var ks=Object.keys(mem); return ks[i] || null; },
+        get length(){ return Object.keys(mem).length; }
+      };
+      try{
+        Object.defineProperty(window, 'localStorage', { get:function(){ return fake; }, configurable:true });
+      }catch(_){ try{ window.localStorage=fake; }catch(_){} }
+      try{
+        Object.defineProperty(window, 'sessionStorage', { get:function(){ return fake; }, configurable:true });
+      }catch(_){ try{ window.sessionStorage=fake; }catch(_){} }
+    }catch(_){}
+  }
+})();
+</script>
+<style id="splash-v2-glue-style"></style>
+<script id="splash-sponsor-domain-v1">
+(function(){
+  /* 12 MiniBattles: the sponsor intro (obj_sponsorgrande step handler) reads
+     document.domain and only calls room_goto_next when it contains a known
+     partner site (twoplayergames / crazygames / etc.). On any other domain the
+     intro never advances and the game freezes on the splash. Spoof document.domain
+     so the substring check passes and the intro auto-advances to the menu.
+     Only override the getter; keep the setter a safe no-op (Apps Script sandbox
+     throws SecurityError on real document.domain assignment). */
+  try{
+    var descriptor=Object.getOwnPropertyDescriptor(Document.prototype,'domain');
+    if(descriptor&&typeof descriptor.get==='function'){
+      Object.defineProperty(document,'domain',{
+        configurable:true,
+        enumerable:Boolean(descriptor.enumerable),
+        get:function(){ return 'twoplayergames.org'; },
+        set:function(){ /* no-op */ }
+      });
+      window.__sponsorDomainShim=true;
+    }
+  }catch(_){}
+})();
+</script>
+<script id="splash-v2-glue">
+(function(){
+  'use strict';
+  function redispatch(){ try{ window.dispatchEvent(new Event('resize')); }catch(_){} }
+  window.addEventListener('message', function(e){
+    if(e && e.data === 'splash-v2:resize'){ redispatch(); setTimeout(redispatch, 300); }
+    if(e && e.data === 'splash-v2:resume-audio'){ resumeAudio(); setTimeout(resumeAudio, 200); }
+  });
+  function resumeAudio(){
+    var cs=window.__splashAudioContextsV3||[];
+    for(var i=0;i<cs.length;i++){ try{ if(cs[i].state==='suspended') cs[i].resume(); }catch(_){} }
+    var media=document.querySelectorAll('audio,video');
+    for(var j=0;j<media.length;j++){ try{ if(media[j].paused) media[j].play().catch(function(){}); }catch(_){} }
+  }
+  ['pointerdown','mousedown','touchstart','keydown'].forEach(function(t){
+    window.addEventListener(t, resumeAudio, {capture:true,passive:true});
+  });
+  /* Auto-start: trigger start-btn after GameMaker script is ready */
+  (function(){
+    function tryAutoStart(){
+      if(typeof GameMaker_Init !== 'function') return setTimeout(tryAutoStart, 80);
+      var btn=document.getElementById('start-btn');
+      if(btn) try{ btn.click(); }catch(_){}
+    }
+    if(document.readyState==='complete') tryAutoStart();
+    else window.addEventListener('load', tryAutoStart);
+  })();
+  /* Save bridge: mirror localStorage <-> server via google.script.run */
+  try{
+    var ls = window.localStorage;
+    var KEY = '__splash_v2_player__';
+    var playerId = ls.getItem(KEY);
+    if(!playerId){
+      playerId = 'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+      ls.setItem(KEY, playerId);
+    }
+    window.__splashPlayerId = playerId;
+    var gs = window.google && google.script && google.script.run;
+    function snapshot(){
+      var o={};
+      for(var i=0;i<ls.length;i++){
+        var k=ls.key(i);
+        if(k===KEY) continue;
+        try{ o[k]=ls.getItem(k); }catch(_){}
+      }
+      return o;
+    }
+    function save(){
+      if(!gs) return;
+      var data; try{ data=snapshot(); }catch(_){ return; }
+      var json=JSON.stringify(data);
+      if(json.length>200000) return;
+      gs.withFailureHandler(function(){}).saveGameProgress(playerId, data);
+    }
+    if(gs){
+      gs.withSuccessHandler(function(data){
+        if(!data) return;
+        for(var k in data){
+          try{ if(ls.getItem(k)==null) ls.setItem(k, data[k]); }catch(_){}
+        }
+        try{ window.dispatchEvent(new Event('splash-v2:progress-loaded')); }catch(_){}
+        redispatch();
+      }).withFailureHandler(function(){}).loadGameProgress(playerId);
+    }
+    var t=null;
+    function scheduleSave(){ if(t) return; t=setTimeout(function(){ t=null; save(); }, 1500); }
+    try{
+      var origSet = Storage.prototype.setItem;
+      Storage.prototype.setItem = function(k,v){
+        origSet.call(this,k,v);
+        if(this===ls) scheduleSave();
+      };
+    }catch(_){}
+    setInterval(save, 30000);
+    window.addEventListener('pagehide', save);
+    document.addEventListener('visibilitychange', function(){ if(document.hidden) save(); });
+  }catch(_){}
+})();
+</script>
+
+  <base href="https://cdn.jsdelivr.net/gh/cool2fun/assets-4accde@8d3517e7cd933c25da58ddf9300c50a574b21c29/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="google" content="notranslate">
+  <title>12 MiniBattles</title>
+
+  <script data-local-runtime-shim>
+  window.__gaTracker=window.__gaTracker||function(){};
+  window.gdsdk=window.gdsdk||{showAd:function(){return Promise.resolve();},preloadAd:function(){return Promise.resolve();}};
+  window.GameMonetize=window.GameMonetize||{};
+  (function(){
+    var open=XMLHttpRequest.prototype.open,setH=XMLHttpRequest.prototype.setRequestHeader;
+    XMLHttpRequest.prototype.open=function(m){this.__isGet=(""+m).toUpperCase()==="GET";return open.apply(this,arguments)};
+    XMLHttpRequest.prototype.setRequestHeader=function(k){if(this.__isGet&&/^content-type$/i.test(k))return;return setH.apply(this,arguments)};
+  })();
+  </script>
+
+  <style>
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;overflow:hidden;background: transparent}
+    body{display:flex;color:#e8ebf2;font-family:system-ui,-apple-system,sans-serif}
+    .player{flex:1;display:flex;min-height:0}
+    .frame{display:flex;flex-direction:column;width:100%;height:100%}
+    .stage{position:relative;flex:1;min-height:0;background: transparent;border-radius:14px;overflow:hidden}
+    .gm4html5_div_class{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+    .gm4html5_div_class canvas{display:block;max-width:100%;max-height:100%}
+    canvas{image-rendering:optimizeSpeed;-webkit-interpolation-mode:nearest-neighbor;-ms-touch-action:none;margin:0;padding:0;border:0}
+    :-webkit-full-screen #canvas{width:100%;height:100%}
+    :-webkit-full-screen{width:100%;height:100%}
+    </style>
+</head>
+<body>
+  <div class="player" id="player">
+    <div class="frame">
+      <div class="stage" id="stage">
+        <div class="gm4html5_div_class" id="gm4html5_div_id">
+          <canvas id="canvas" width="1280" height="720">
+            <p>Your browser doesn't support HTML5 canvas.</p>
+          </canvas>
+        </div>
+</div>
+    </div>
+  </div>
+
+  <script src="html5game/12 MINIBATTLES HTML5.js?GKZYB=1865364663"></script>
+  <script>
+(function(){
+    var started=false;
+    function isReady(){ return typeof GameMaker_Init === 'function'; }
+    function startGame(){
+      if(started) return;
+      if(!isReady()){
+        var tries=0;
+        var wait=function(){
+          if(isReady()) startGame();
+          else if(tries++ < 50) setTimeout(wait, 80);
+          else console.error('GameMaker_Init not ready');
+        };
+        wait();
+        return;
+      }
+      started=true;
+      // GameMaker HTML5 expects a global g_WebAudioContext existing before init,
+      // then it replaces it. Use window explicitly so strict-mode safe.
+      var hadNoAudio = !window.AudioContext && !window.webkitAudioContext;
+      if(hadNoAudio && typeof window.g_WebAudioContext === 'undefined') window.g_WebAudioContext = {};
+      try{ GameMaker_Init(); }catch(e){ console.error(e); started=false; return; }
+      window.dispatchEvent(new Event('resize'));
+      // Kick game loop: GameMaker may pause until first input; synthesize one
+      setTimeout(function(){
+        try{
+          var cvs=document.getElementById('canvas');
+          if(cvs){
+            var r=cvs.getBoundingClientRect();
+            var cx=r.left + r.width/2, cy=r.top + r.height/2;
+            ['pointerdown','mousedown','mouseup','click'].forEach(function(t){
+              try{ cvs.dispatchEvent(new MouseEvent(t,{bubbles:true,clientX:cx,clientY:cy,button:0})); }catch(_){}
+              try{ window.dispatchEvent(new MouseEvent(t,{bubbles:true,clientX:cx,clientY:cy,button:0})); }catch(_){}
+            });
+          }
+        }catch(_){}
+        try{ window.dispatchEvent(new Event('resize')); }catch(_){}
+      }, 400);
+      try{
+        var ctxs=window.__splashAudioContextsV3||[];
+        ctxs.forEach(function(c){ if(c.state==='suspended') c.resume(); });
+      }catch(_){}
+    }
+    if(document.readyState==='complete') startGame();
+    else window.addEventListener('load', startGame);
+  })();
+  </script>
+</body>
+</html>
