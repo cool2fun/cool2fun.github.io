@@ -21,6 +21,7 @@
   var base = frame.getAttribute("data-base");
   var partsAttr = frame.getAttribute("data-parts");
   var started = false;
+  var imaReady = null;
 
   function el(tag, cls, text) {
     var e = document.createElement(tag);
@@ -216,7 +217,7 @@
     });
   }
 
-  function loadVastAd(overlay, status) {
+  function loadVastAd(splash, status) {
     var stage = el("div", "vast-stage");
     var video = document.createElement("video");
     var adContainer = el("div", "vast-ad-container");
@@ -229,13 +230,14 @@
     video.setAttribute("playsinline", "true");
     stage.appendChild(video);
     stage.appendChild(adContainer);
-    overlay.insertBefore(stage, status);
+    frame.appendChild(stage);
+    splash.remove();
 
     function finish() {
       if (finished) return;
       finished = true;
       if (adsManager) { try { adsManager.destroy(); } catch (e) {} }
-      overlay.remove();
+      stage.remove();
       startGame();
     }
 
@@ -246,7 +248,7 @@
       finish();
     }
 
-    loadImaSdk().then(function () {
+    (imaReady || loadImaSdk()).then(function () {
       var displayContainer = new google.ima.AdDisplayContainer(adContainer, video);
       var adsLoader = new google.ima.AdsLoader(displayContainer);
       adsLoader.addEventListener(google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED, function (event) {
@@ -274,17 +276,17 @@
   }
 
   function buildOverlay() {
-    var overlay = el("div", "play-overlay");
+    var splash = el("div", "play-splash");
     var playBtn = el("button", "btn overlay-play", "Play Game");
     var vastStatus = el("p", "overlay-status", "Click Play Game to start");
     playBtn.type = "button";
-    overlay.appendChild(playBtn);
-    overlay.appendChild(vastStatus);
-    frame.appendChild(overlay);
+    splash.appendChild(playBtn);
+    splash.appendChild(vastStatus);
+    frame.appendChild(splash);
 
     playBtn.addEventListener("click", function () {
       playBtn.disabled = true;
-      loadVastAd(overlay, vastStatus);
+      loadVastAd(splash, vastStatus);
     });
   }
   // ---- Toolbar buttons ----
@@ -308,6 +310,10 @@
 
   function init() {
     wireToolbar();
+    // Start downloading IMA before the user clicks so initialization remains one-click.
+    imaReady = loadImaSdk();
+    // Mark the rejection as handled here; the click path still receives it below.
+    imaReady.catch(function () {});
     buildOverlay();
   }
 
