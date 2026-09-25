@@ -16,30 +16,33 @@
           return m ? decodeURIComponent(m[1].replace(/\+/g,' ')) : '';
         } catch(e){ return ''; }
       }
+
       var pageUrl = getParam('page_url');
       var refUrl  = getParam('ref');
-      // Dự phòng: nhận qua postMessage nếu URL bị cắt
-      window.addEventListener('message', function(e){
-        if (e.data && e.data.type === 'ads-wrapper-ready' && e.data.url) {
-          if (!pageUrl || pageUrl.indexOf('googleusercontent') !== -1 || pageUrl.indexOf('script.google') !== -1) {
-            pageUrl = e.data.url;
+
+      // Dự phòng: Tự động bắt document.referrer nếu pageUrl trống hoặc bị dính link googleusercontent
+      if (!pageUrl || pageUrl.indexOf('googleusercontent') !== -1 || pageUrl.indexOf('script.google') !== -1) {
+        try {
+          if (document.referrer && document.referrer.indexOf('googleusercontent') === -1) {
+            pageUrl = document.referrer;
           }
-          if (e.data.ref && !refUrl) refUrl = e.data.ref;
-        }
-      });
+        } catch(e) {}
+      }
+
+      var adLoaded = false;
+      var slot = null;
+
       window.googletag = window.googletag || {cmd: []};
+
       googletag.cmd.push(function() {
-        if (pageUrl) {
-          try { googletag.pubads().setLocation(pageUrl); } catch(e){}
-          try { googletag.pubads().setTargeting('page_url', pageUrl); } catch(e){}
-          if (refUrl) try { googletag.pubads().setTargeting('ref', refUrl); } catch(e){}
-        }
         googletag.pubads().collapseEmptyDivs(false);
         googletag.pubads().enableSingleRequest();
         googletag.pubads().setCentering(false);
         googletag.pubads().setSafeFrameConfig({ allowPushExpansion: true });
-        var slot = googletag.defineSlot('/23136362493/300x600-ADS', [300, 600], 'div-gpt-ad-1787498389104-0')
+
+        slot = googletag.defineSlot('/23136362493/300x600-ADS', [300, 600], 'div-gpt-ad-1787498389104-0')
           .addService(googletag.pubads());
+
         var refreshCount = 0;
         googletag.pubads().addEventListener('slotRenderEnded', function(event) {
           if (event.slot === slot && event.isEmpty && refreshCount < 3) {
@@ -47,10 +50,41 @@
             setTimeout(function(){ googletag.pubads().refresh([slot]); }, 4000 * refreshCount);
           }
         });
+
         googletag.pubads().disableInitialLoad();
         googletag.enableServices();
         googletag.display('div-gpt-ad-1787498389104-0');
-        googletag.pubads().refresh([slot]);
+
+        // Chờ 300ms để ưu tiên nhận postMessage từ trang cha gửi sang trước khi load
+        setTimeout(function() {
+          if (!adLoaded) {
+            fetchAndRenderAd();
+          }
+        }, 300);
+      });
+
+      // Hàm thực thi gọi quảng cáo khi đã cập nhật xong URL
+      function fetchAndRenderAd() {
+        if (adLoaded) return;
+        adLoaded = true;
+
+        googletag.cmd.push(function() {
+          if (pageUrl) {
+            try { googletag.pubads().setPageUrl(pageUrl); } catch(e){} // Sửa lỗi setLocation -> setPageUrl
+            try { googletag.pubads().setTargeting('page_url', pageUrl); } catch(e){}
+            if (refUrl) try { googletag.pubads().setTargeting('ref', refUrl); } catch(e){}
+          }
+          googletag.pubads().refresh([slot]);
+        });
+      }
+
+      // Lắng nghe sự kiện postMessage từ trang cha
+      window.addEventListener('message', function(e){
+        if (e.data && e.data.type === 'ads-wrapper-ready' && e.data.url) {
+          pageUrl = e.data.url;
+          if (e.data.ref) refUrl = e.data.ref;
+          fetchAndRenderAd();
+        }
       });
     </script>
 </head>
