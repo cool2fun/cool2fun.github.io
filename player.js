@@ -1,5 +1,5 @@
 /*
- * Shared Ruffle player + VAST pre-roll ad overlay.
+ * Shared Ruffle player + IMA VAST pre-roll ad overlay.
  * Reads game metadata from #play-frame data-* attributes:
  *   data-type  = "single" | "multi"
  *   data-url   = .swf URL                        (single)
@@ -10,7 +10,8 @@
 (function () {
   "use strict";
 
-  var VAST_TAG = "https://pubads.g.doubleclick.net/gampad/ads?iu=/23332761288/cool2fun.github.io/cool2fun.github.io_vast&description_url=http%3A%2F%2Fcool2fun.github.io&tfcd=0&npa=0&sz=400x300%7C640x360%7C640x480&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&vpmute=1";
+  var IMA_SDK = "https://imasdk.googleapis.com/js/sdkloader/ima3.js";
+  var VAST_TAG = "https://pubads.g.doubleclick.net/gampad/ads?iu=/23332761288/cool2fun.github.io/cool2fun.github.io_vast&description_url=https%3A%2F%2Fcool2fun.github.io&tfcd=0&npa=0&sz=400x300%7C640x360%7C640x480&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&vpmute=1";
 
   var frame = document.getElementById("play-frame");
   if (!frame) return;
@@ -201,91 +202,91 @@
     else loadSingle();
   }
 
-  // ---- VAST pre-roll ad overlay ----
-  function track(url) {
-    if (!url) return;
-    try { (new Image()).src = url; } catch (e) {}
+  // ---- IMA VAST pre-roll ad overlay ----
+  function loadImaSdk() {
+    if (window.google && window.google.ima) return Promise.resolve();
+    return new Promise(function (resolve, reject) {
+      var script = document.createElement("script");
+      var timer = setTimeout(function () { reject(new Error("IMA SDK timeout")); }, 10000);
+      script.src = IMA_SDK;
+      script.async = true;
+      script.onload = function () { clearTimeout(timer); resolve(); };
+      script.onerror = function () { clearTimeout(timer); reject(new Error("IMA SDK failed to load")); };
+      document.head.appendChild(script);
+    });
   }
 
   function loadVastAd(overlay, status) {
-    fetch(VAST_TAG, { credentials: "omit" })
-      .then(function (response) {
-        if (!response.ok) throw new Error("VAST HTTP " + response.status);
-        return response.text();
-      })
-      .then(function (xml) {
-        var doc = new DOMParser().parseFromString(xml, "text/xml");
-        var linear = doc.querySelector("Ad Linear");
-        var media = linear && linear.querySelector("MediaFile");
-        if (!linear || !media) throw new Error("No playable VAST ad");
-        var impression = doc.querySelector("Impression");
-        if (impression) track(impression.textContent.trim());
-        var video = document.createElement("video");
-        video.className = "vast-video";
-        video.muted = true;
-        video.autoplay = true;
-        video.playsInline = true;
-        video.src = media.textContent.trim();
-        overlay.insertBefore(video, overlay.firstChild);
-        status.textContent = "Advertisement";
-        video.addEventListener("ended", function () {
-          var complete = linear.querySelectorAll('Tracking[event="complete"]');
-          Array.prototype.forEach.call(complete, function (node) { track(node.textContent.trim()); });
-          overlay.remove();
-          startGame();
-        });
-        video.addEventListener("error", function () { overlay.remove(); startGame(); });
-        var play = video.play();
-        if (play && play.catch) play.catch(function () { overlay.remove(); startGame(); });
-      })
-      .catch(function () { overlay.remove(); startGame(); });
+    var stage = el("div", "vast-stage");
+    var video = document.createElement("video");
+    var adContainer = el("div", "vast-ad-container");
+    var finished = false;
+    var adsManager = null;
+
+    video.className = "vast-video";
+    video.muted = true;
+    video.playsInline = true;
+    video.setAttribute("playsinline", "true");
+    stage.appendChild(video);
+    stage.appendChild(adContainer);
+    overlay.insertBefore(stage, status);
+
+    function finish() {
+      if (finished) return;
+      finished = true;
+      if (adsManager) { try { adsManager.destroy(); } catch (e) {} }
+      overlay.remove();
+      startGame();
+    }
+
+    function fail(event) {
+      var error = event && event.getError ? event.getError() : event;
+      status.textContent = "Advertisement unavailable";
+      if (window.console && console.warn && error) console.warn("IMA ad error", error);
+      finish();
+    }
+
+    loadImaSdk().then(function () {
+      var displayContainer = new google.ima.AdDisplayContainer(adContainer, video);
+      var adsLoader = new google.ima.AdsLoader(displayContainer);
+      adsLoader.addEventListener(google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED, function (event) {
+        adsManager = event.getAdsManager(video);
+        adsManager.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, fail);
+        adsManager.addEventListener(google.ima.AdEvent.Type.STARTED, function () { status.textContent = "Advertisement"; });
+        adsManager.addEventListener(google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED, finish);
+        adsManager.addEventListener(google.ima.AdEvent.Type.COMPLETE, finish);
+        try {
+          adsManager.init(stage.clientWidth, stage.clientHeight, google.ima.ViewMode.NORMAL);
+          adsManager.start();
+        } catch (e) { fail(e); }
+      });
+      adsLoader.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, fail);
+      displayContainer.initialize();
+      var request = new google.ima.AdsRequest();
+      request.adTagUrl = VAST_TAG;
+      request.linearAdSlotWidth = stage.clientWidth;
+      request.linearAdSlotHeight = stage.clientHeight;
+      request.nonLinearAdSlotWidth = stage.clientWidth;
+      request.nonLinearAdSlotHeight = Math.round(stage.clientHeight * 0.25);
+      status.textContent = "Advertisement loading...";
+      adsLoader.requestAds(request);
+    }).catch(fail);
   }
 
   function buildOverlay() {
     var overlay = el("div", "play-overlay");
-    var vastStatus = el("p", "overlay-status", "Advertisement loading...");
+    var playBtn = el("button", "btn overlay-play", "Play Game");
+    var vastStatus = el("p", "overlay-status", "Click Play Game to start");
+    playBtn.type = "button";
+    overlay.appendChild(playBtn);
     overlay.appendChild(vastStatus);
     frame.appendChild(overlay);
-    loadVastAd(overlay, vastStatus);
-    return;
-
-    var adBox = el("div", "overlay-ad");
-    adBox.setAttribute("data-ad", "overlay");
-    adBox.setAttribute("role", "complementary");
-    adBox.setAttribute("aria-label", "Advertisement");
-    adBox.appendChild(el("span", null, "Advertisement"));
-
-    var playBtn = el("button", "btn overlay-play");
-    playBtn.type = "button";
-    playBtn.textContent = "▶ Play Game";
-
-    var status = el("p", "overlay-status");
-
-    overlay.appendChild(adBox);
-    overlay.appendChild(playBtn);
-    overlay.appendChild(status);
-    frame.appendChild(overlay);
-
-    // Fill the overlay ad unit (also covers overlays rebuilt on Restart).
-    if (window.C2FAds && window.C2FAds.refresh) window.C2FAds.refresh(overlay);
 
     playBtn.addEventListener("click", function () {
       playBtn.disabled = true;
-      var remaining = COUNTDOWN_SECONDS;
-      status.textContent = "Your game starts in " + remaining + "s…";
-      var timer = setInterval(function () {
-        remaining--;
-        if (remaining > 0) {
-          status.textContent = "Your game starts in " + remaining + "s…";
-        } else {
-          clearInterval(timer);
-          overlay.remove();
-          startGame();
-        }
-      }, 1000);
+      loadVastAd(overlay, vastStatus);
     });
   }
-
   // ---- Toolbar buttons ----
   function wireToolbar() {
     var fsBtn = document.getElementById("fullscreen-btn");
