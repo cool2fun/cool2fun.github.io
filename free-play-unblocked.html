@@ -1,95 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads 970x250</title>
-    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
-    <style>
-      html, body { margin:0; padding:0; width:970px; height:250px; overflow:hidden; background:transparent; }
-      #div-gpt-ad-1790219733264-0 { width:970px; height:250px; }
-    </style>
-    <script>
-      function getParam(name) {
-        try {
-          var m = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
-          return m ? decodeURIComponent(m[1].replace(/\+/g,' ')) : '';
-        } catch(e){ return ''; }
-      }
-
-      var pageUrl = getParam('page_url');
-      var refUrl  = getParam('ref');
-
-      // Tự động lấy document.referrer nếu pageUrl bị trống hoặc dính link googleusercontent
-      if (!pageUrl || pageUrl.indexOf('googleusercontent') !== -1 || pageUrl.indexOf('script.google') !== -1) {
-        try {
-          if (document.referrer && document.referrer.indexOf('googleusercontent') === -1) {
-            pageUrl = document.referrer;
-          }
-        } catch(e) {}
-      }
-
-      var adLoaded = false;
-      var slot = null;
-
-      window.googletag = window.googletag || {cmd: []};
-
-      googletag.cmd.push(function() {
-        googletag.pubads().collapseEmptyDivs(false);
-        googletag.pubads().enableSingleRequest();
-        googletag.pubads().setCentering(false);
-        googletag.pubads().setSafeFrameConfig({ allowPushExpansion: true });
-
-        slot = googletag.defineSlot('/23136362493/970x250-ADS', [[970, 90], [970, 250]], 'div-gpt-ad-1790219733264-0')
-          .addService(googletag.pubads());
-
-        var refreshCount = 0;
-        googletag.pubads().addEventListener('slotRenderEnded', function(event) {
-          if (event.slot === slot && event.isEmpty && refreshCount < 3) {
-            refreshCount++;
-            setTimeout(function(){ googletag.pubads().refresh([slot]); }, 4000 * refreshCount);
-          }
-        });
-
-        googletag.pubads().disableInitialLoad();
-        googletag.enableServices();
-        googletag.display('div-gpt-ad-1790219733264-0');
-
-        // Đợi 300ms để chờ postMessage từ trang cha gửi sang. Nếu không thấy mới dùng URL mặc định
-        setTimeout(function() {
-          if (!adLoaded) {
-            fetchAndRenderAd();
-          }
-        }, 300);
-      });
-
-      // Hàm gọi quảng cáo với URL chuẩn
-      function fetchAndRenderAd() {
-        if (adLoaded) return;
-        adLoaded = true;
-
-        googletag.cmd.push(function() {
-          if (pageUrl) {
-            try { googletag.pubads().setPageUrl(pageUrl); } catch(e){} // Sửa thành setPageUrl
-            try { googletag.pubads().setTargeting('page_url', pageUrl); } catch(e){}
-            if (refUrl) try { googletag.pubads().setTargeting('ref', refUrl); } catch(e){}
-          }
-          googletag.pubads().refresh([slot]);
-        });
-      }
-
-      // Lắng nghe sự kiện postMessage từ trang cha
-      window.addEventListener('message', function(e){
-        if (e.data && e.data.type === 'ads-wrapper-ready' && e.data.url) {
-          pageUrl = e.data.url;
-          if (e.data.ref) refUrl = e.data.ref;
-          fetchAndRenderAd();
-        }
-      });
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Play Online Games</title>
+  <meta name="description" content="Free Play Unblocked Games Online">
+  <meta name="keyword" content="unblocked games, play online game, html5 games.">
+  <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
+<script>
+  window.googletag = window.googletag || {cmd: []};
+  googletag.cmd.push(function() {
+    googletag.defineSlot('/23136362493/970x250-ADS', [[970, 90], [970, 250]], 'div-gpt-ad-1790391347855-0').addService(googletag.pubads());
+    googletag.pubads().enableSingleRequest();
+    googletag.enableServices();
+  });
+</script>
 </head>
 <body>
-    <!-- /23136362493/970x250-ADS -->
-    <div id='div-gpt-ad-1790219733264-0' style='width:970px;height:250px;'></div>
+  <!-- /23136362493/970x250-ADS -->
+<div id='div-gpt-ad-1790391347855-0' style='min-width: 970px; min-height: 90px;'>
+  <script>
+    googletag.cmd.push(function() { googletag.display('div-gpt-ad-1790391347855-0'); });
+  </script>
+</div>
 </body>
 </html>
