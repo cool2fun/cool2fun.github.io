@@ -2,59 +2,51 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Leaderboard Ad</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AdsKeeper Optimized</title>
   
-  <!-- 1. TỐI ƯU TỐC ĐỘ TẢI TRANG (Preconnect & DNS Prefetch) -->
-  <link rel="preconnect" href="https://securepubads.g.doubleclick.net" crossorigin>
-  <link rel="dns-prefetch" href="https://securepubads.g.doubleclick.net">
-  <link rel="preconnect" href="https://tpc.googlesyndication.com" crossorigin>
-  <link rel="dns-prefetch" href="https://tpc.googlesyndication.com">
+  <!-- 1. TĂNG TỐC KẾT NỐI MÁY CHỦ QUẢNG CÁO (Preconnect & DNS Prefetch) -->
+  <link rel="preconnect" href="https://jsc.adskeeper.com" crossorigin>
+  <link rel="dns-prefetch" href="https://jsc.adskeeper.com">
+  <link rel="preconnect" href="https://servicer.adskeeper.com" crossorigin>
+  <link rel="dns-prefetch" href="https://servicer.adskeeper.com">
 
-  <!-- 2. CSS TỐI ƯU CĂN GIỮA TRONG IFRAME -->
+  <!-- 2. CSS TỐI ƯU KHÔNG GIAN ĐỂ HIỂN THỊ ĐƯỢC NHIỀU QC NHẤT -->
   <style>
     html, body {
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100%;
-      overflow: hidden; /* Triệt tiêu thanh cuộn */
       background-color: transparent;
-      display: flex;
-      justify-content: center; /* Căn giữa chiều ngang */
-      align-items: center;     /* Căn giữa chiều dọc */
+      overflow: hidden; /* Xóa bỏ thanh cuộn */
     }
-    #div-gpt-ad-1790664249940-0 {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    div[data-widget-id="2089003"] {
+      width: 100% !important;
+      min-height: 300px;
     }
   </style>
 
-  <!-- 3. GOOGLE PUBLISHER TAG (GPT) -->
-  <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
-  <script>
-    window.googletag = window.googletag || {cmd: []};
-    googletag.cmd.push(function() {
-      googletag.defineSlot('/23136362493/970x250-ADS', [[970, 90], [970, 250]], 'div-gpt-ad-1790664249940-0')
-               .addService(googletag.pubads());
-      
-      googletag.pubads().enableSingleRequest();
-      googletag.pubads().setCentering(true); // Tự động căn giữa quảng cáo 970x90 nếu kích thước khung là 970x250
-      googletag.pubads().collapseEmptyDivs(); // Xóa khoảng trống nếu không phân phối được quảng cáo
-      
-      googletag.enableServices();
-    });
-  </script>
+  <!-- Script gốc AdsKeeper -->
+  <script src="https://jsc.adskeeper.com/site/1113039.js" async></script>
 </head>
 <body>
 
-  <!-- /23136362493/970x250-ADS -->
-  <div id='div-gpt-ad-1790664249940-0' style='min-width: 970px; min-height: 90px;'>
-    <script>
-      googletag.cmd.push(function() { googletag.display('div-gpt-ad-1790664249940-0'); });
-    </script>
-  </div>
+  <!-- Khung chứa quảng cáo -->
+  <div data-type="_mgwidget" data-widget-id="2089003"></div>
+
+  <!-- 3. SCRIPT KÍCH HOẠT VÀ TỰ ĐỘNG TẢI LẠI (AUTO-REFRESH) -->
+  <script>
+    // Khởi tạo tải quảng cáo ban đầu
+    (function(w,q){w[q]=w[q]||[];w[q].push(["_mgc.load"])})(window,"_mgq");
+
+    // Tự động kéo thêm lượt quảng cáo mới mỗi 35 giây (chỉ chạy khi người dùng đang xem tab)
+    setInterval(function() {
+      if (!document.hidden && window._mgq) {
+        window._mgq.push(["_mgc.load"]);
+      }
+    }, 35000); // 35000ms = 35 giây
+  </script>
 
 </body>
 </html>
