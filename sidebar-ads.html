@@ -2,26 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <meta name="description" content="Onlien Games Browser, Free Play html">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Online Games Browser - Ad</title>
+  <meta name="description" content="Online Games Browser, Free Play html">
   <meta name="keyword" content="unblocked games at schools, play online games, html5 games, flash game.">
+  
+  <!-- 1. TỐI ƯU HÓA TỐC ĐỘ TẢI (Preconnect & DNS-Prefetch) -->
+  <link rel="preconnect" href="https://securepubads.g.doubleclick.net" crossorigin>
+  <link rel="dns-prefetch" href="https://securepubads.g.doubleclick.net">
+  <link rel="preconnect" href="https://tpc.googlesyndication.com" crossorigin>
+  <link rel="dns-prefetch" href="https://tpc.googlesyndication.com">
+
+  <!-- 2. TỐI ƯU CSS CHO IFRAME -->
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden; /* Triệt tiêu thanh cuộn */
+      background-color: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #div-gpt-ad-1790391929938-0 {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+
+  <!-- Google Publisher Tag -->
   <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
-<script>
-  window.googletag = window.googletag || {cmd: []};
-  googletag.cmd.push(function() {
-    googletag.defineOutOfPageSlot('/23136362493/300x600-ADS', 'div-gpt-ad-1790391929938-0').addService(googletag.pubads());
-    googletag.pubads().enableSingleRequest();
-    googletag.enableServices();
-  });
-</script>
+  <script>
+    window.googletag = window.googletag || {cmd: []};
+    googletag.cmd.push(function() {
+      // 3. ĐÃ SỬA: Chuyển sang defineSlot và thêm các kích thước cùng tỷ lệ để tăng doanh thu
+      googletag.defineSlot('/23136362493/300x600-ADS', [[300, 600], [300, 250], [160, 600]], 'div-gpt-ad-1790391929938-0')
+               .addService(googletag.pubads());
+      
+      googletag.pubads().enableSingleRequest();
+      googletag.pubads().setCentering(true); // Căn giữa quảng cáo
+      googletag.pubads().collapseEmptyDivs(); // Thu gọn nếu trống quảng cáo
+      googletag.enableServices();
+    });
+  </script>
 </head>
 <body>
   <!-- /23136362493/300x600-ADS -->
-<div id='div-gpt-ad-1790391929938-0'>
-  <script>
-    googletag.cmd.push(function() { googletag.display('div-gpt-ad-1790391929938-0'); });
-  </script>
-</div>
+  <div id='div-gpt-ad-1790391929938-0' style='min-width: 160px; min-height: 250px;'>
+    <script>
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-1790391929938-0'); });
+    </script>
+  </div>
 </body>
 </html>
