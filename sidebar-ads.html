@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Leaderboard Ad</title>
+  <title>Sidebar Ad</title>
   
   <!-- 1. TỐI ƯU TỐC ĐỘ TẢI TRANG (Preconnect & DNS Prefetch) -->
   <link rel="preconnect" href="https://securepubads.g.doubleclick.net" crossorigin>
@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://tpc.googlesyndication.com" crossorigin>
   <link rel="dns-prefetch" href="https://tpc.googlesyndication.com">
 
-  <!-- 2. CSS TỐI ƯU CĂN GIỮA TRONG IFRAME -->
+  <!-- 2. CSS TỐI ƯU CĂN GIỮA CHO SIDEBAR (Tránh bị lệch khi hiện size 160x600 hoặc 300x250) -->
   <style>
     html, body {
       margin: 0;
@@ -21,10 +21,10 @@
       overflow: hidden; /* Triệt tiêu thanh cuộn */
       background-color: transparent;
       display: flex;
-      justify-content: center; /* Căn giữa chiều ngang */
-      align-items: center;     /* Căn giữa chiều dọc */
+      justify-content: center; /* Căn giữa ngang */
+      align-items: center;     /* Căn giữa dọc */
     }
-    #div-gpt-ad-1790664249940-0 {
+    #div-gpt-ad-1790664128483-0 {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -36,12 +36,12 @@
   <script>
     window.googletag = window.googletag || {cmd: []};
     googletag.cmd.push(function() {
-      googletag.defineSlot('/23136362493/970x250-ADS', [[970, 90], [970, 250]], 'div-gpt-ad-1790664249940-0')
+      googletag.defineSlot('/23136362493/300x600-ADS', [[300, 600], [160, 600], [300, 250]], 'div-gpt-ad-1790664128483-0')
                .addService(googletag.pubads());
       
       googletag.pubads().enableSingleRequest();
-      googletag.pubads().setCentering(true); // Tự động căn giữa quảng cáo 970x90 nếu kích thước khung là 970x250
-      googletag.pubads().collapseEmptyDivs(); // Xóa khoảng trống nếu không phân phối được quảng cáo
+      googletag.pubads().setCentering(true); // Tự động căn giữa quảng cáo nhỏ trong khung lớn
+      googletag.pubads().collapseEmptyDivs(); // Xóa bỏ khoảng trống nếu không có quảng cáo trả về
       
       googletag.enableServices();
     });
@@ -49,10 +49,10 @@
 </head>
 <body>
 
-  <!-- /23136362493/970x250-ADS -->
-  <div id='div-gpt-ad-1790664249940-0' style='min-width: 970px; min-height: 90px;'>
+  <!-- /23136362493/300x600-ADS -->
+  <div id='div-gpt-ad-1790664128483-0' style='min-width: 160px; min-height: 250px;'>
     <script>
-      googletag.cmd.push(function() { googletag.display('div-gpt-ad-1790664249940-0'); });
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-1790664128483-0'); });
     </script>
   </div>
 
