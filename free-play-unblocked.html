@@ -2,26 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Play Online Games</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Play Online Games - Ad</title>
   <meta name="description" content="Free Play Unblocked Games Online">
   <meta name="keyword" content="unblocked games, play online game, html5 games.">
+  
+  <!-- 1. TỐI ƯU HÓA TỐC ĐỘ TẢI (Preconnect & DNS-Prefetch) -->
+  <link rel="preconnect" href="https://securepubads.g.doubleclick.net" crossorigin>
+  <link rel="dns-prefetch" href="https://securepubads.g.doubleclick.net">
+  <link rel="preconnect" href="https://tpc.googlesyndication.com" crossorigin>
+  <link rel="dns-prefetch" href="https://tpc.googlesyndication.com">
+
+  <!-- 2. TỐI ƯU CSS CHO IFRAME -->
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden; /* Tránh xuất hiện thanh cuộn xấu xí */
+      background-color: transparent; /* Giúp tiệp màu nền với trang web gốc */
+      display: flex;
+      justify-content: center; /* Căn giữa theo chiều ngang */
+      align-items: center; /* Căn giữa theo chiều dọc */
+    }
+    #div-gpt-ad-1790391347855-0 {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+
+  <!-- Google Publisher Tag -->
   <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
-<script>
-  window.googletag = window.googletag || {cmd: []};
-  googletag.cmd.push(function() {
-    googletag.defineSlot('/23136362493/970x250-ADS', [[970, 90], [970, 250]], 'div-gpt-ad-1790391347855-0').addService(googletag.pubads());
-    googletag.pubads().enableSingleRequest();
-    googletag.enableServices();
-  });
-</script>
+  <script>
+    window.googletag = window.googletag || {cmd: []};
+    googletag.cmd.push(function() {
+      googletag.defineSlot('/23136362493/970x250-ADS', [[970, 90], [970, 250]], 'div-gpt-ad-1790391347855-0')
+               .addService(googletag.pubads());
+      
+      // 3. CÁC LỆNH TỐI ƯU QUẢNG CÁO GPT
+      googletag.pubads().enableSingleRequest();
+      googletag.pubads().setCentering(true); // Yêu cầu Google tự động căn giữa quảng cáo
+      googletag.pubads().collapseEmptyDivs(); // Thu gọn thẻ Div nếu không có quảng cáo (Fill rate < 100%)
+      
+      googletag.enableServices();
+    });
+  </script>
 </head>
 <body>
   <!-- /23136362493/970x250-ADS -->
-<div id='div-gpt-ad-1790391347855-0' style='min-width: 970px; min-height: 90px;'>
-  <script>
-    googletag.cmd.push(function() { googletag.display('div-gpt-ad-1790391347855-0'); });
-  </script>
-</div>
+  <div id='div-gpt-ad-1790391347855-0' style='min-width: 970px; min-height: 90px;'>
+    <script>
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-1790391347855-0'); });
+    </script>
+  </div>
 </body>
 </html>
