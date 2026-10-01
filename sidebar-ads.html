@@ -2,57 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Sidebar Ad</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free HTML5 & Flash Games - Play Online Browser Games</title>
+  <meta name="description" content="Play the best free HTML5 and Flash browser games online. Instant play action, arcade, puzzle, and strategy web games with no downloads needed.">
+  <meta name="keywords" content="free online games, HTML5 games, Flash games, browser games, unblocked games, arcade games, web games, play instant games">
   
-  <!-- 1. TỐI ƯU TỐC ĐỘ TẢI TRANG (Preconnect & DNS Prefetch) -->
+  <!-- Preconnect for fast Google Ad loading -->
   <link rel="preconnect" href="https://securepubads.g.doubleclick.net" crossorigin>
-  <link rel="dns-prefetch" href="https://securepubads.g.doubleclick.net">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
   <link rel="preconnect" href="https://tpc.googlesyndication.com" crossorigin>
-  <link rel="dns-prefetch" href="https://tpc.googlesyndication.com">
 
-  <!-- 2. CSS TỐI ƯU CĂN GIỮA CHO SIDEBAR (Tránh bị lệch khi hiện size 160x600 hoặc 300x250) -->
   <style>
     html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden; /* Triệt tiêu thanh cuộn */
+      margin: 0; padding: 0; width: 100%; height: 100%;
+      overflow: hidden; /* Hide scrollbars inside iframe */
       background-color: transparent;
-      display: flex;
-      justify-content: center; /* Căn giữa ngang */
-      align-items: center;     /* Căn giữa dọc */
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      font-family: Arial, sans-serif;
     }
-    #div-gpt-ad-1790664128483-0 {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    .cpc-keywords {
+      font-size: 10px; color: #888; text-align: center;
+      margin-bottom: 5px; line-height: 1.2; max-width: 300px;
+    }
+    .ad-container {
+      display: flex; justify-content: center; align-items: center;
+      overflow: hidden;
     }
   </style>
 
-  <!-- 3. GOOGLE PUBLISHER TAG (GPT) -->
+  <!-- GAM Header Code - Vertical Sizes -->
   <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
   <script>
     window.googletag = window.googletag || {cmd: []};
     googletag.cmd.push(function() {
-      googletag.defineSlot('/23136362493/300x600-ADS', [[300, 600], [160, 600], [300, 250]], 'div-gpt-ad-1790664128483-0')
-               .addService(googletag.pubads());
-      
+      googletag.defineSlot('/23136362493/300x600-ADS', [[300, 600], [160, 600], [300, 250]], 'div-gpt-ad-1790834325118-0').addService(googletag.pubads());
       googletag.pubads().enableSingleRequest();
-      googletag.pubads().setCentering(true); // Tự động căn giữa quảng cáo nhỏ trong khung lớn
-      googletag.pubads().collapseEmptyDivs(); // Xóa bỏ khoảng trống nếu không có quảng cáo trả về
-      
+      googletag.pubads().collapseEmptyDivs();
+      googletag.pubads().setCentering(true);
       googletag.enableServices();
     });
   </script>
 </head>
 <body>
 
-  <!-- /23136362493/300x600-ADS -->
-  <div id='div-gpt-ad-1790664128483-0' style='min-width: 160px; min-height: 250px;'>
+  <!-- Contextual Keyword Seed -->
+  <div class="cpc-keywords">
+    Free HTML5 & Flash browser games, online arcade, action & puzzle games.
+  </div>
+
+  <!-- GAM Body Code - Vertical -->
+  <div class="ad-container" id='div-gpt-ad-1790834325118-0' style='min-width: 160px; min-height: 250px;'>
     <script>
-      googletag.cmd.push(function() { googletag.display('div-gpt-ad-1790664128483-0'); });
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-1790834325118-0'); });
     </script>
   </div>
 
