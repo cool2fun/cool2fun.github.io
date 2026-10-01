@@ -3,50 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AdsKeeper Optimized</title>
+  <title>Play Free HTML5 & Flash Games Online - Web Arcade Games</title>
+  <meta name="description" content="Discover top-rated free HTML5 and Flash games. Play instant action, strategy, sports, and casual browser games directly in your browser.">
+  <meta name="keywords" content="play free games, HTML5 browser games, classic flash games, online arcade, instant play games, best web games, unblocked browser games">
   
-  <!-- 1. TĂNG TỐC KẾT NỐI MÁY CHỦ QUẢNG CÁO (Preconnect & DNS Prefetch) -->
-  <link rel="preconnect" href="https://jsc.adskeeper.com" crossorigin>
-  <link rel="dns-prefetch" href="https://jsc.adskeeper.com">
-  <link rel="preconnect" href="https://servicer.adskeeper.com" crossorigin>
-  <link rel="dns-prefetch" href="https://servicer.adskeeper.com">
+  <!-- Preconnect for fast Google Ad loading -->
+  <link rel="preconnect" href="https://securepubads.g.doubleclick.net" crossorigin>
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://tpc.googlesyndication.com" crossorigin>
 
-  <!-- 2. CSS TỐI ƯU KHÔNG GIAN ĐỂ HIỂN THỊ ĐƯỢC NHIỀU QC NHẤT -->
   <style>
     html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
+      margin: 0; padding: 0; width: 100%; height: 100%;
+      overflow: hidden; /* Hide scrollbars inside iframe */
       background-color: transparent;
-      overflow: hidden; /* Xóa bỏ thanh cuộn */
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      font-family: Arial, sans-serif;
     }
-    div[data-widget-id="2089003"] {
-      width: 100% !important;
-      min-height: 300px;
+    .cpc-keywords {
+      font-size: 10px; color: #888; text-align: center;
+      margin-bottom: 5px; line-height: 1.2; max-width: 728px;
+    }
+    .ad-container {
+      display: flex; justify-content: center; align-items: center;
+      overflow: hidden;
     }
   </style>
 
-  <!-- Script gốc AdsKeeper -->
-  <script src="https://jsc.adskeeper.com/site/1113039.js" async></script>
+  <!-- GAM Header Code - Horizontal Sizes -->
+  <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
+  <script>
+    window.googletag = window.googletag || {cmd: []};
+    googletag.cmd.push(function() {
+      googletag.defineSlot('/23136362493/300x600-ADS', [[970, 250], [970, 90], [728, 90]], 'div-gpt-ad-1790834325118-0').addService(googletag.pubads());
+      googletag.pubads().enableSingleRequest();
+      googletag.pubads().collapseEmptyDivs();
+      googletag.pubads().setCentering(true);
+      googletag.enableServices();
+    });
+  </script>
 </head>
 <body>
 
-  <!-- Khung chứa quảng cáo -->
-  <div data-type="_mgwidget" data-widget-id="2089003"></div>
+  <!-- Contextual Keyword Seed -->
+  <div class="cpc-keywords">
+    Top rated HTML5 & Flash web games: Action, puzzle, strategy, and casual browser gaming.
+  </div>
 
-  <!-- 3. SCRIPT KÍCH HOẠT VÀ TỰ ĐỘNG TẢI LẠI (AUTO-REFRESH) -->
-  <script>
-    // Khởi tạo tải quảng cáo ban đầu
-    (function(w,q){w[q]=w[q]||[];w[q].push(["_mgc.load"])})(window,"_mgq");
-
-    // Tự động kéo thêm lượt quảng cáo mới mỗi 35 giây (chỉ chạy khi người dùng đang xem tab)
-    setInterval(function() {
-      if (!document.hidden && window._mgq) {
-        window._mgq.push(["_mgc.load"]);
-      }
-    }, 35000); // 35000ms = 35 giây
-  </script>
+  <!-- GAM Body Code - Horizontal -->
+  <div class="ad-container" id='div-gpt-ad-1790834325118-0' style='min-width: 728px; min-height: 90px;'>
+    <script>
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-1790834325118-0'); });
+    </script>
+  </div>
 
 </body>
 </html>
