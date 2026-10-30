@@ -243,8 +243,6 @@
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch (e) {}
-
-    return { cancel: function () { clearTimeout(timer); } };
   }
 
   function buildOverlay() {
@@ -258,7 +256,6 @@
 
     playBtn.addEventListener("click", function () {
       playBtn.disabled = true;
-      status.textContent = "Loading advertisement…";
       buildAdOverlay(splash);
     });
   }
