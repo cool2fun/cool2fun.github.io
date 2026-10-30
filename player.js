@@ -1,7 +1,7 @@
 /*
- * Shared Ruffle player + IMA VAST pre-roll ad overlay.
+ * Shared Ruffle player + AdSense H5 pre-roll overlay.
  * Reads game metadata from #play-frame data-* attributes:
- *   data-type  = "single" | "multi"
+ *   data-type  = "single" | "multi" | "iframe"
  *   data-url   = .swf URL                        (single)
  *   data-base  = jsDelivr base URL               (multi, parts + manifest.json)
  *   data-parts = comma-joined absolute part URLs (multi, no manifest)
@@ -10,8 +10,10 @@
 (function () {
   "use strict";
 
-  var IMA_SDK = "https://imasdk.googleapis.com/js/sdkloader/ima3.js";
-  var VAST_TAG = "https://pubads.g.doubleclick.net/gampad/ads?iu=/23332761288/cool2fun.github.io/cool2fun.github.io_vast&description_url=https%3A%2F%2Fcool2fun.github.io&tfcd=0&npa=0&sz=400x300%7C640x360%7C640x480&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&vpmute=1";
+  // ---- AdSense config (pub-6556788076088846) ----
+  var AD_CLIENT = "ca-pub-6556788076088846";
+  var AD_SLOT = "9406916186";   // 300x250 pre-roll unit
+  var AD_SHOW_MS = 5000;        // auto-start the game after this many ms
 
   var frame = document.getElementById("play-frame");
   if (!frame) return;
@@ -21,7 +23,6 @@
   var base = frame.getAttribute("data-base");
   var partsAttr = frame.getAttribute("data-parts");
   var started = false;
-  var imaReady = null;
 
   function el(tag, cls, text) {
     var e = document.createElement(tag);
@@ -203,92 +204,65 @@
     else loadSingle();
   }
 
-  // ---- IMA VAST pre-roll ad overlay ----
-  function loadImaSdk() {
-    if (window.google && window.google.ima) return Promise.resolve();
-    return new Promise(function (resolve, reject) {
-      var script = document.createElement("script");
-      var timer = setTimeout(function () { reject(new Error("IMA SDK timeout")); }, 10000);
-      script.src = IMA_SDK;
-      script.async = true;
-      script.onload = function () { clearTimeout(timer); resolve(); };
-      script.onerror = function () { clearTimeout(timer); reject(new Error("IMA SDK failed to load")); };
-      document.head.appendChild(script);
-    });
-  }
+  // ---- AdSense H5 pre-roll overlay ----
+  function buildAdOverlay(splash) {
+    var overlay = el("div", "ads-overlay");
+    var adWrap = el("div", "ad-wrap");
+    var ins = document.createElement("ins");
+    ins.className = "adsbygoogle";
+    ins.style.display = "inline-block";
+    ins.style.width = "300px";
+    ins.style.height = "250px";
+    ins.setAttribute("data-ad-client", AD_CLIENT);
+    ins.setAttribute("data-ad-slot", AD_SLOT);
+    adWrap.appendChild(ins);
 
-  function loadVastAd(splash, status) {
-    var stage = el("div", "vast-stage");
-    var video = document.createElement("video");
-    var adContainer = el("div", "vast-ad-container");
-    var finished = false;
-    var adsManager = null;
+    var status = el("p", "ad-status", "Quảng cáo");
+    var skipBtn = el("button", "btn ad-skip", "Bỏ qua");
+    skipBtn.type = "button";
 
-    video.className = "vast-video";
-    video.muted = true;
-    video.playsInline = true;
-    video.setAttribute("playsinline", "true");
-    stage.appendChild(video);
-    stage.appendChild(adContainer);
-    frame.appendChild(stage);
+    overlay.appendChild(adWrap);
+    overlay.appendChild(status);
+    overlay.appendChild(skipBtn);
+    frame.appendChild(overlay);
     splash.remove();
+
+    var finished = false;
 
     function finish() {
       if (finished) return;
       finished = true;
-      if (adsManager) { try { adsManager.destroy(); } catch (e) {} }
-      stage.remove();
-      startGame();
+      overlay.remove();
+      startGame(); // sets started = true internally
     }
 
-    function fail(event) {
-      var error = event && event.getError ? event.getError() : event;
-      status.textContent = "Advertisement unavailable";
-      if (window.console && console.warn && error) console.warn("IMA ad error", error);
-      finish();
-    }
+    skipBtn.addEventListener("click", finish);
+    var timer = setTimeout(finish, AD_SHOW_MS);
 
-    (imaReady || loadImaSdk()).then(function () {
-      var displayContainer = new google.ima.AdDisplayContainer(adContainer, video);
-      var adsLoader = new google.ima.AdsLoader(displayContainer);
-      adsLoader.addEventListener(google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED, function (event) {
-        adsManager = event.getAdsManager(video);
-        adsManager.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, fail);
-        adsManager.addEventListener(google.ima.AdEvent.Type.STARTED, function () { status.textContent = "Advertisement"; });
-        adsManager.addEventListener(google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED, finish);
-        adsManager.addEventListener(google.ima.AdEvent.Type.COMPLETE, finish);
-        try {
-          adsManager.init(stage.clientWidth, stage.clientHeight, google.ima.ViewMode.NORMAL);
-          adsManager.start();
-        } catch (e) { fail(e); }
-      });
-      adsLoader.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, fail);
-      displayContainer.initialize();
-      var request = new google.ima.AdsRequest();
-      request.adTagUrl = VAST_TAG;
-      request.linearAdSlotWidth = stage.clientWidth;
-      request.linearAdSlotHeight = stage.clientHeight;
-      request.nonLinearAdSlotWidth = stage.clientWidth;
-      request.nonLinearAdSlotHeight = Math.round(stage.clientHeight * 0.25);
-      status.textContent = "Advertisement loading...";
-      adsLoader.requestAds(request);
-    }).catch(fail);
+    // Tell AdSense to fill the newly inserted <ins> unit.
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (e) {}
+
+    return { cancel: function () { clearTimeout(timer); } };
   }
 
   function buildOverlay() {
     var splash = el("div", "play-splash");
     var playBtn = el("button", "btn overlay-play", "Play Game");
-    var vastStatus = el("p", "overlay-status", "Click Play Game to start");
+    var status = el("p", "overlay-status", "Click Play Game to start");
     playBtn.type = "button";
     splash.appendChild(playBtn);
-    splash.appendChild(vastStatus);
+    splash.appendChild(status);
     frame.appendChild(splash);
 
     playBtn.addEventListener("click", function () {
       playBtn.disabled = true;
-      loadVastAd(splash, vastStatus);
+      status.textContent = "Loading advertisement…";
+      buildAdOverlay(splash);
     });
   }
+
   // ---- Toolbar buttons ----
   function wireToolbar() {
     var fsBtn = document.getElementById("fullscreen-btn");
@@ -310,10 +284,6 @@
 
   function init() {
     wireToolbar();
-    // Start downloading IMA before the user clicks so initialization remains one-click.
-    imaReady = loadImaSdk();
-    // Mark the rejection as handled here; the click path still receives it below.
-    imaReady.catch(function () {});
     buildOverlay();
   }
 

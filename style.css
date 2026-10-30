@@ -280,39 +280,48 @@ img { max-width: 100%; display: block; }
   text-align: center;
 }
 
-/* Inline VAST creative shown before the shared game player starts. */
-.vast-video {
-  display: block;
-  width: min(100%, 640px);
-  max-height: 360px;
-  margin: 0 auto 12px;
-  background: #000;
-  object-fit: contain;
-}
-
-/* IMA renders the VAST creative into this stage before the game loads. */
-.vast-stage {
+/* AdSense H5 pre-roll overlay shown before the game starts. */
+.ads-overlay {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: radial-gradient(circle at 50% 40%, #1c2030, #0b0d12);
+  text-align: center;
+  z-index: 5;
+}
+
+.ad-wrap {
+  width: 300px;
+  height: 250px;
   background: #000;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.vast-stage .vast-video,
-.vast-ad-container {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  max-height: none;
+.ad-status {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
   margin: 0;
+  min-height: 1.2em;
 }
 
-.vast-ad-container { z-index: 1; }
-.vast-stage .vast-video { z-index: 0; }
+.ad-skip {
+  font-size: 0.95rem;
+  padding: 0.6rem 1.4rem;
+  background: var(--color-accent);
+  color: #fff;
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.ad-skip:hover { background: var(--color-accent-hover); }
 
 .overlay-play {
   font-size: 1.1rem;
