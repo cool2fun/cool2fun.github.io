@@ -1,0 +1,11 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: ["main"] # hoặc master tùy nhánh của bạn
+  workflow_dispatch:
+
+# Khai báo concurrency để ngăn chặn nhiều tiến trình deploy chạy đè lên nhau
+concurrency:
+  group: "pages"
+  cancel-in-progress: false # Giữ nguyên false để lượt trước deploy xong xuôi, lượt sau tự động xếp hàng đợi
