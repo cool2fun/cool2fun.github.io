@@ -14,7 +14,6 @@
         overflow: hidden; 
         background: transparent; 
       }
-      /* Căn giữa toàn bộ quảng cáo ngang cả chiều dọc lẫn chiều ngang */
       #div-gpt-ad-1793521597208-0 { 
         width: 970px; 
         height: 250px; 
@@ -32,8 +31,6 @@
       }
       var pageUrl = getParam('page_url');
       var refUrl  = getParam('ref');
-
-      // Nhận URL qua postMessage nếu chạy qua iframe bọc
       window.addEventListener('message', function(e){
         if (e.data && e.data.type === 'ads-wrapper-ready' && e.data.url) {
           if (!pageUrl || pageUrl.indexOf('googleusercontent') !== -1 || pageUrl.indexOf('script.google') !== -1) {
@@ -42,30 +39,22 @@
           if (e.data.ref && !refUrl) refUrl = e.data.ref;
         }
       });
-
       window.googletag = window.googletag || {cmd: []};
       googletag.cmd.push(function() {
         if (pageUrl) {
-          // Báo URL trang cha thực tế cho GAM thay vì dùng setLocation sai cú pháp
           try { googletag.pubads().setPageURL(pageUrl); } catch(e){}
           try { googletag.pubads().setTargeting('page_url', pageUrl); } catch(e){}
           if (refUrl) try { googletag.pubads().setTargeting('ref', refUrl); } catch(e){}
         }
-
         googletag.pubads().collapseEmptyDivs(false);
         googletag.pubads().enableSingleRequest();
-        
-        // Bật căn giữa mặc định từ engine của Google
         googletag.pubads().setCentering(true);
         googletag.pubads().setSafeFrameConfig({ allowPushExpansion: true });
-
-        // Khai báo nhóm kích thước ngang (Billboard 970x250, Leaderboard 970x90, 728x90)
         var slot = googletag.defineSlot(
           '/23136362493/300x600-ADS', 
           [[970, 250], [970, 90], [728, 90]], 
           'div-gpt-ad-1793521597208-0'
         ).addService(googletag.pubads());
-
         var refreshCount = 0;
         googletag.pubads().addEventListener('slotRenderEnded', function(event) {
           if (event.slot === slot && event.isEmpty && refreshCount < 3) {
