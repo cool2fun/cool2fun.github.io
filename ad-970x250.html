@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quảng cáo ngang</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f5f5f5; color: #222; padding: 20px; }
+    .page { max-width: 1000px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    h1 { text-align: center; margin-bottom: 40px; font-size: 28px; color: #1a1a1a; }
+    .ad-container { display: flex; flex-direction: column; gap: 30px; }
+    .ad-unit { border: 1px solid #ddd; text-align: center; padding: 20px; background: #fafafa; border-radius: 4px; }
+    .ad-label { font-size: 12px; color: #666; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .leaderboard .ad-slot { min-width: 728px; min-height: 90px; }
+    .billboard .ad-slot { min-width: 970px; min-height: 250px; }
+    .mrec .ad-slot { min-width: 300px; min-height: 250px; margin: 0 auto; }
+    @media (max-width: 768px) {
+      .leaderboard .ad-slot { min-width: 320px; min-height: 50px; }
+      .billboard .ad-slot { min-width: 320px; min-height: 100px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>Trang quảng cáo ngang (Landscape)</h1>
+    <div class="ad-container">
+      <div class="ad-unit leaderboard">
+        <div class="ad-label">Leaderboard 728 × 90</div>
+        <div class="ad-slot" id="div-gpt-ad-1793521597208-0"></div>
+        <script>
+          googletag.cmd.push(function() { googletag.display('div-gpt-ad-1793521597208-0'); });
+        </script>
+      </div>
+
+      <div class="ad-unit billboard">
+        <div class="ad-label">Billboard 970 × 250</div>
+        <div class="ad-slot" id="div-gpt-ad-1793521597208-1"></div>
+        <script>
+          googletag.cmd.push(function() { googletag.display('div-gpt-ad-1793521597208-1'); });
+        </script>
+      </div>
+
+      <div class="ad-unit mrec">
+        <div class="ad-label">Medium Rectangle 300 × 250</div>
+        <div class="ad-slot" id="div-gpt-ad-1793521597208-2"></div>
+        <script>
+          googletag.cmd.push(function() { googletag.display('div-gpt-ad-1793521597208-2'); });
+        </script>
+      </div>
+    </div>
+  </div>
+
+  <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
+  <script>
+    window.googletag = window.googletag || {cmd: []};
+    googletag.cmd.push(function() {
+      googletag.defineSlot('/23136362493/300x600-ADS', [[728, 90], [970, 250], [300, 250]], 'div-gpt-ad-1793521597208-0').addService(googletag.pubads());
+      googletag.defineSlot('/23136362493/300x600-ADS', [[970, 250], [728, 90]], 'div-gpt-ad-1793521597208-1').addService(googletag.pubads());
+      googletag.defineSlot('/23136362493/300x600-ADS', [[300, 250]], 'div-gpt-ad-1793521597208-2').addService(googletag.pubads());
+      googletag.pubads().enableSingleRequest();
+      googletag.enableServices();
+    });
+  </script>
+</body>
+</html>
