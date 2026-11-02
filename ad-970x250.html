@@ -1,156 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads 970x250</title>
-    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
+    <title>GAM Ad - Ngang (970x250)</title>
     <style>
-      html, body { 
-        margin: 0; 
-        padding: 0; 
-        width: 100%; 
-        height: 100%; 
-        overflow: hidden; 
-        background: transparent !important; 
-      }
-
-      /* Tự căn giữa tuyệt đối cả kích thước 970x250, 970x90 và 728x90 */
-      #div-gpt-ad-1793521597208-0 { 
-        width: 100%; 
-        height: 100%; 
-        min-height: 90px;
-        max-width: 970px;
-        max-height: 250px;
-        margin: 0 auto;
-        display: flex; 
-        justify-content: center; 
-        align-items: center; 
-        background: transparent;
-      }
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f2f5;
+        }
+        .ad-container {
+            width: 970px;
+            height: 250px;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
     </style>
+    
+    <!-- GAM Head -->
+    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
     <script>
-      function getParam(name) {
-        try {
-          var m = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
-          return m ? decodeURIComponent(m[1].replace(/\+/g,' ')) : '';
-        } catch(e){ return ''; }
-      }
-
-      var pageUrl = getParam('page_url');
-      var refUrl  = getParam('ref');
-      var ppid    = getParam('ppid');
-      var kv      = getParam('kv');
-
-      var slot = null;
-      var adInitiated = false;
-
-      // Hàm áp dụng toàn bộ thông số ngữ cảnh vào GAM trước khi gọi quảng cáo
-      function applyTargeting() {
-        if (pageUrl) {
-          try { googletag.pubads().setPageURL(pageUrl); } catch(e){}
-          try { googletag.pubads().setTargeting('page_url', pageUrl); } catch(e){}
-        }
-        if (refUrl) {
-          try { googletag.pubads().setTargeting('ref', refUrl); } catch(e){}
-        }
-        if (ppid) {
-          try { googletag.pubads().setPublisherProvidedId(ppid); } catch(e){}
-        }
-        // Xử lý chuỗi Key-Value (ví dụ: cat=tech,pos=top hoặc pos:header)
-        if (kv) {
-          try {
-            kv.split(/[,&]/).forEach(function(pair) {
-              var parts = pair.split(/[=:]/);
-              if (parts.length === 2) {
-                googletag.pubads().setTargeting(parts[0].trim(), parts[1].trim());
-              }
-            });
-          } catch(e){}
-        }
-        // Chuyển tiếp các thông số UTM phục vụ đo lường
-        ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(function(utm) {
-          var val = getParam(utm);
-          if (val) {
-            try { googletag.pubads().setTargeting(utm, val); } catch(e){}
-          }
-        });
-      }
-
-      // Hàm kích hoạt hiển thị và nạp ad
-      function loadAd() {
-        if (adInitiated) return;
-        adInitiated = true;
-        googletag.cmd.push(function() {
-          applyTargeting();
-          googletag.display('div-gpt-ad-1793521597208-0');
-          if (slot) {
-            googletag.pubads().refresh([slot]);
-          }
-        });
-      }
-
-      // Lắng nghe dữ liệu postMessage từ iframe Apps Script cha
-      window.addEventListener('message', function(e){
-        if (e.data && e.data.type === 'ads-wrapper-ready' && e.data.url) {
-          var newUrl = e.data.url;
-          var newRef = e.data.ref;
-          var isBadUrl = (!pageUrl || pageUrl.indexOf('googleusercontent') !== -1 || pageUrl.indexOf('script.google') !== -1);
-
-          if (isBadUrl && newUrl) {
-            pageUrl = newUrl;
-            if (newRef) refUrl = newRef;
-
-            if (!adInitiated) {
-              loadAd();
-            } else {
-              googletag.cmd.push(function() {
-                applyTargeting();
-                if (slot) googletag.pubads().refresh([slot]);
-              });
-            }
-          }
-        }
-      });
-
       window.googletag = window.googletag || {cmd: []};
       googletag.cmd.push(function() {
-        googletag.pubads().collapseEmptyDivs(false);
+        googletag.defineSlot('/23136362493/Ads-Hub', [970, 250], 'div-gpt-ad-1793608999364-0').addService(googletag.pubads());
         googletag.pubads().enableSingleRequest();
-        googletag.pubads().setCentering(true);
-        googletag.pubads().setSafeFrameConfig({ allowPushExpansion: true });
-
-        // Khai báo nhóm kích thước ngang (Billboard 970x250, Leaderboard 970x90, 728x90)
-        slot = googletag.defineSlot(
-          '/23136362493/300x600-ADS', 
-          [[970, 250], [970, 90], [728, 90]], 
-          'div-gpt-ad-1793521597208-0'
-        ).addService(googletag.pubads());
-
-        // Cơ chế thử lại tối đa 3 lần nếu vị trí chưa có quảng cáo (Backfill)
-        var refreshCount = 0;
-        googletag.pubads().addEventListener('slotRenderEnded', function(event) {
-          if (event.slot === slot && event.isEmpty && refreshCount < 3) {
-            refreshCount++;
-            setTimeout(function(){ googletag.pubads().refresh([slot]); }, 4000 * refreshCount);
-          }
-        });
-
-        googletag.pubads().disableInitialLoad();
         googletag.enableServices();
-
-        // Kiểm tra xem đã có URL hợp lệ từ URL query chưa
-        var hasValidUrl = pageUrl && pageUrl.indexOf('googleusercontent') === -1 && pageUrl.indexOf('script.google') === -1;
-        if (hasValidUrl) {
-          loadAd();
-        } else {
-          // Chờ tối đa 350ms tín hiệu postMessage từ Apps Script, nếu không có thì nạp dự phòng
-          setTimeout(loadAd, 350);
-        }
       });
     </script>
 </head>
 <body>
-    <div id='div-gpt-ad-1793521597208-0'></div>
+    <div class="ad-container">
+        <!-- GAM Body -->
+        <div id='div-gpt-ad-1793608999364-0' style='min-width: 970px; min-height: 250px;'>
+          <script>
+            googletag.cmd.push(function() { googletag.display('div-gpt-ad-1793608999364-0'); });
+          </script>
+        </div>
+    </div>
 </body>
 </html>
