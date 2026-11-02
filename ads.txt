@@ -1,5 +1,4 @@
 google.com, pub-6556788076088846, DIRECT, f08c47fec0942fa0
-netlink.vn, 93656639, DIRECT
 webtvasia, 6053625320 , DIRECT
 google.com, pub-6854175133357499, DIRECT, f08c47fec0942fa0
 google.com, pub-9682124988938381, DIRECT, f08c47fec0942fa0
