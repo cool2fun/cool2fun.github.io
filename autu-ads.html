@@ -1,87 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads 300x600</title>
-    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
+    <title>GAM Ad - Dọc (300x600)</title>
     <style>
-      html, body { 
-        margin: 0; 
-        padding: 0; 
-        width: 300px; 
-        height: 600px; 
-        overflow: hidden; 
-        background: transparent; 
-      }
-      /* Căn giữa tuyệt đối cả chiều ngang và chiều dọc cho mọi kích thước banner */
-      #div-gpt-ad-1793521597208-0 { 
-        width: 300px; 
-        height: 600px; 
-        display: flex; 
-        justify-content: center; 
-        align-items: center; 
-      }
-    </style>
-    <script>
-      function getParam(name) {
-        try {
-          var m = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
-          return m ? decodeURIComponent(m[1].replace(/\+/g,' ')) : '';
-        } catch(e){ return ''; }
-      }
-      var pageUrl = getParam('page_url');
-      var refUrl  = getParam('ref');
-
-      // Dự phòng: nhận qua postMessage nếu URL bị cắt
-      window.addEventListener('message', function(e){
-        if (e.data && e.data.type === 'ads-wrapper-ready' && e.data.url) {
-          if (!pageUrl || pageUrl.indexOf('googleusercontent') !== -1 || pageUrl.indexOf('script.google') !== -1) {
-            pageUrl = e.data.url;
-          }
-          if (e.data.ref && !refUrl) refUrl = e.data.ref;
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f2f5;
         }
-      });
-
+        .ad-container {
+            width: 300px;
+            height: 600px;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+    </style>
+    
+    <!-- GAM Head -->
+    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
+    <script>
       window.googletag = window.googletag || {cmd: []};
       googletag.cmd.push(function() {
-        if (pageUrl) {
-          // UPDATE: Sửa setLocation thành setPageURL chuẩn của GPT dành cho iframe
-          try { googletag.pubads().setPageURL(pageUrl); } catch(e){}
-          try { googletag.pubads().setTargeting('page_url', pageUrl); } catch(e){}
-          if (refUrl) try { googletag.pubads().setTargeting('ref', refUrl); } catch(e){}
-        }
-
-        googletag.pubads().collapseEmptyDivs(false);
+        googletag.defineSlot('/23136362493/Ads-Hub', [300, 600], 'div-gpt-ad-1793608999364-0').addService(googletag.pubads());
         googletag.pubads().enableSingleRequest();
-
-        // UPDATE: Bật true để GAM tự động căn giữa iframe quảng cáo bên trong
-        googletag.pubads().setCentering(true);
-        googletag.pubads().setSafeFrameConfig({ allowPushExpansion: true });
-
-        // Cấu hình nhóm kích thước dọc/vuông phù hợp khung 300x600
-        var slot = googletag.defineSlot(
-          '/23136362493/300x600-ADS', 
-          [[300, 600], [160, 600], [300, 250]], 
-          'div-gpt-ad-1793521597208-0'
-        ).addService(googletag.pubads());
-
-        var refreshCount = 0;
-        googletag.pubads().addEventListener('slotRenderEnded', function(event) {
-          if (event.slot === slot && event.isEmpty && refreshCount < 3) {
-            refreshCount++;
-            setTimeout(function(){ googletag.pubads().refresh([slot]); }, 4000 * refreshCount);
-          }
-        });
-
-        googletag.pubads().disableInitialLoad();
         googletag.enableServices();
-        googletag.display('div-gpt-ad-1793521597208-0');
-        googletag.pubads().refresh([slot]);
       });
     </script>
 </head>
 <body>
-    <div id='div-gpt-ad-1793521597208-0'></div>
+    <div class="ad-container">
+        <!-- GAM Body -->
+        <div id='div-gpt-ad-1793608999364-0' style='min-width: 300px; min-height: 600px;'>
+          <script>
+            googletag.cmd.push(function() { googletag.display('div-gpt-ad-1793608999364-0'); });
+          </script>
+        </div>
+    </div>
 </body>
 </html>
